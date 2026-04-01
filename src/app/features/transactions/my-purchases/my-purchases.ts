@@ -5,6 +5,21 @@ import { TransactionService } from '../../../core/services/transaction.service';
 import { PostService } from '../../../core/services/post.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { switchMap, forkJoin, of, take, map } from 'rxjs';
+import { Post } from '../../../shared/models/post.interface';
+
+type TransactionStatus = 'pendiente' | 'completado' | 'cancelado';
+type PurchasePostStatus = Post['estado'] | 'desconocido';
+
+interface PurchaseTransaction {
+  id: string;
+  postId: string;
+  monto: number;
+  estado: TransactionStatus;
+  codigo?: string;
+  createdAt?: unknown;
+  titulo: string;
+  postEstado: PurchasePostStatus;
+}
 
 @Component({
   selector: 'app-my-purchases',
@@ -14,7 +29,7 @@ import { switchMap, forkJoin, of, take, map } from 'rxjs';
   styleUrl: './my-purchases.css',
 })
 export class MyPurchases implements OnInit {
-  transactions: any[] = [];
+  transactions: PurchaseTransaction[] = [];
 
   constructor(
     private transactionService: TransactionService,
@@ -42,7 +57,7 @@ export class MyPurchases implements OnInit {
                 ...t,
                 titulo: post?.titulo ?? t.postId,
                 postEstado: post?.estado ?? 'desconocido'
-              }))
+              }) as PurchaseTransaction)
             )
           )
         );
@@ -50,14 +65,14 @@ export class MyPurchases implements OnInit {
     ).subscribe({
       next: (txs) => {
         this.ngZone.run(() => {
-          this.transactions = txs;
+          this.transactions = [...txs].sort((left, right) => this.getTimeValue(right.createdAt) - this.getTimeValue(left.createdAt));
         });
       },
       error: (err) => console.error('Error al cargar mis compras', err)
     });
   }
 
-  cancelarCompra(transaction: any): void {
+  cancelarCompra(transaction: PurchaseTransaction): void {
     if (transaction.estado !== 'pendiente') {
       return;
     }
@@ -72,5 +87,69 @@ export class MyPurchases implements OnInit {
       .catch((err) => {
         console.error('Error cancelando compra', err);
       });
+  }
+
+  get activeTransactions(): PurchaseTransaction[] {
+    return this.transactions.filter(transaction => transaction.estado === 'pendiente');
+  }
+
+  get historyTransactions(): PurchaseTransaction[] {
+    return this.transactions.filter(transaction => transaction.estado !== 'pendiente');
+  }
+
+  formatCurrency(value: number): string {
+    return new Intl.NumberFormat('es-CL', {
+      style: 'currency',
+      currency: 'CLP',
+      maximumFractionDigits: 0,
+    }).format(value);
+  }
+
+  formatDate(value: unknown): string {
+    const time = this.getTimeValue(value);
+
+    if (!time) {
+      return 'Fecha no disponible';
+    }
+
+    return new Intl.DateTimeFormat('es-CL', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    }).format(new Date(time));
+  }
+
+  getHistoryCopy(transaction: PurchaseTransaction): string {
+    if (transaction.estado === 'completado') {
+      return `Comprado el ${this.formatDate(transaction.createdAt)}`;
+    }
+
+    return `Cancelado el ${this.formatDate(transaction.createdAt)}`;
+  }
+
+  getInitials(title: string): string {
+    return title
+      .split(' ')
+      .filter(Boolean)
+      .slice(0, 2)
+      .map(part => part[0]?.toUpperCase() ?? '')
+      .join('');
+  }
+
+  private getTimeValue(value: unknown): number {
+    if (value && typeof value === 'object' && 'toDate' in value && typeof (value as { toDate: () => Date }).toDate === 'function') {
+      return (value as { toDate: () => Date }).toDate().getTime();
+    }
+
+    if (value instanceof Date) {
+      return value.getTime();
+    }
+
+    if (typeof value === 'string' || typeof value === 'number') {
+      const parsedDate = new Date(value);
+      return Number.isNaN(parsedDate.getTime()) ? 0 : parsedDate.getTime();
+    }
+
+    return 0;
   }
 }

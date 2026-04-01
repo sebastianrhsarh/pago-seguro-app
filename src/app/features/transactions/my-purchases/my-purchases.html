@@ -1,48 +1,110 @@
-<div class="my-purchases">
-  <h2>Mis Compras</h2>
+<section class="my-purchases-page">
+  <header class="purchases-header">
+    <h1>Mis Compras</h1>
+    <p>Gestiona tus adquisiciones y códigos de seguridad.</p>
+  </header>
 
-  @if (transactions && transactions.length > 0) {
-    @for (t of transactions; track t.id) {
-      <div class="purchase-card">
-        <p><strong>Producto:</strong> {{ t.titulo }}</p>
-        <p><strong>Monto:</strong> ${{ t.monto }}</p>
-        <p>
-          <strong>Estado:</strong>
-          <span
-            class="badge"
-            [class.pending]="t.estado === 'pendiente'"
-            [class.completed]="t.estado === 'completado'"
-            [class.cancelado]="t.estado === 'cancelado'"
-          >
-            {{ t.estado }}
-          </span>
-        </p>
-        <p>
-          <strong>Estado del producto:</strong>
-          <span
-            class="badge post-status"
-            [class.disponible]="t.postEstado === 'disponible'"
-            [class.reservado]="t.postEstado === 'reservado'"
-            [class.vendido]="t.postEstado === 'vendido'"
-          >
-            {{ t.postEstado }}
-          </span>
-        </p>
+  <div class="purchases-grid">
+    <section class="active-section">
+      <h2>
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M12 6v6l4 2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M12 3.5a8.5 8.5 0 1 1-6.01 2.49" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M4 4v4h4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        Transacciones en curso
+      </h2>
 
-        @if (t.codigo && t.estado !== 'cancelado') {
-          <p class="code">
-            🔐 Código: <strong>{{ t.codigo }}</strong>
-          </p>
-        }
+      @if (activeTransactions.length > 0) {
+        <div class="active-list">
+          @for (t of activeTransactions; track t.id) {
+            <article class="purchase-highlight-card">
+              <div class="purchase-preview">
+                <div class="preview-glow"></div>
+                <span>{{ getInitials(t.titulo) }}</span>
+              </div>
 
-        @if (t.estado === 'pendiente') {
-          <button class="cancel-button" (click)="cancelarCompra(t)">
-            Cancelar compra
-          </button>
-        }
-      </div>
-    }
-  } @else {
-    <p>No hay compras registradas.</p>
-  }
-</div>
+              <div class="purchase-content">
+                <div class="purchase-headline-row">
+                  <div>
+                    <h3>{{ t.titulo }}</h3>
+                    <p class="purchase-price">{{ formatCurrency(t.monto) }}</p>
+                  </div>
+
+                  <span class="status-pill status-pill--pending">Pendiente</span>
+                </div>
+
+                <div class="security-box">
+                  <div class="security-copy">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                      <path d="M12 3.25 5.5 6v4.1c0 4.23 2.82 8.16 6.5 9.65 3.68-1.49 6.5-5.42 6.5-9.65V6L12 3.25Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+                      <path d="m9.75 11.75 1.5 1.5 3-3.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+
+                    <div>
+                      <p>CÓDIGO DE SEGURIDAD</p>
+                      <strong>{{ t.codigo }}</strong>
+                    </div>
+                  </div>
+
+                  <button type="button" class="cancel-button" (click)="cancelarCompra(t)">
+                    Cancelar compra
+                  </button>
+                </div>
+              </div>
+            </article>
+          }
+        </div>
+      } @else {
+        <div class="empty-state empty-state--active">
+          <h3>No tienes compras pendientes</h3>
+          <p>Tus próximas compras en curso aparecerán aquí junto al código de seguridad.</p>
+        </div>
+      }
+    </section>
+
+    <aside class="history-section">
+      <h2>
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M12 8v4l2.5 1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M20 12a8 8 0 1 1-2.34-5.66" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M20 4v4h-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        Historial
+      </h2>
+
+      @if (historyTransactions.length > 0) {
+        <div class="history-list">
+          @for (t of historyTransactions; track t.id) {
+            <article class="history-card" [class.history-card--cancelled]="t.estado === 'cancelado'">
+              <div class="history-thumb">
+                <span>{{ getInitials(t.titulo) }}</span>
+              </div>
+
+              <div class="history-content">
+                <div class="history-top-row">
+                  <h3>{{ t.titulo }}</h3>
+                  <span
+                    class="status-pill"
+                    [class.status-pill--completed]="t.estado === 'completado'"
+                    [class.status-pill--cancelled]="t.estado === 'cancelado'"
+                  >
+                    {{ t.estado }}
+                  </span>
+                </div>
+
+                <p class="history-price">{{ formatCurrency(t.monto) }}</p>
+                <p class="history-meta">{{ getHistoryCopy(t) }}</p>
+              </div>
+            </article>
+          }
+        </div>
+      } @else {
+        <div class="empty-state empty-state--history">
+          <h3>Sin historial todavía</h3>
+          <p>Las compras completadas o canceladas se irán moviendo aquí automáticamente.</p>
+        </div>
+      }
+    </aside>
+  </div>
+</section>
