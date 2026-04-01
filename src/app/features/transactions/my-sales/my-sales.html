@@ -3,17 +3,22 @@
 
   <ng-container *ngIf="transactions && transactions.length > 0; else sinVentas">
     <div *ngFor="let t of transactions" class="sale-card">
-      <p><strong>Producto:</strong> {{ t.postId }}</p>
-      <p><strong>Monto:</strong> {{ t.monto }}</p>
-      <p><strong>Estado:</strong> {{ t.estado }}</p>
+      <p><strong>Producto:</strong> {{ t.titulo }}</p>
+      <p><strong>Monto:</strong> ${{ t.monto }}</p>
+      <p>
+        <strong>Estado:</strong>
+        <span class="badge" [class.pending]="t.estado === 'pendiente'" [class.completed]="t.estado === 'completado'">
+          {{ t.estado }}
+        </span>
+      </p>
 
       <div *ngIf="t.estado === 'pendiente'" class="confirm">
         <input
           type="text"
-          [(ngModel)]="t.codigoIngresado"
+          [(ngModel)]="codigoIngresadoMap[t.id]"
           placeholder="Ingresar código"
         />
-        <button (click)="validarCodigo(t, t.codigoIngresado)">Confirmar entrega</button>
+        <button (click)="validarCodigo(t)">Confirmar entrega</button>
       </div>
 
       <p *ngIf="t.estado === 'completado'" class="completed">

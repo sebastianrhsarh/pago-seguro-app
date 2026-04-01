@@ -3,8 +3,31 @@
 }
 
 .purchase-card {
-  border: 1px solid #ccc;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.badge {
+  padding: 4px 8px;
   border-radius: 8px;
-  padding: 0.8rem;
-  margin-bottom: 0.8rem;
+  font-size: 12px;
+  display: inline-block;
+}
+
+.pending {
+  background: orange;
+  color: white;
+}
+
+.completed {
+  background: green;
+  color: white;
+}
+
+.code {
+  color: green;
+  font-size: 14px;
 }

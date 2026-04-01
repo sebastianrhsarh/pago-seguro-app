@@ -2,6 +2,9 @@ import { Component, OnInit, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TransactionService } from '../../../core/services/transaction.service';
+import { PostService } from '../../../core/services/post.service';
+import { AuthService } from '../../../core/services/auth.service';
+import { switchMap, forkJoin, of, take, map } from 'rxjs';
 
 @Component({
   selector: 'app-my-sales',
@@ -12,28 +15,44 @@ import { TransactionService } from '../../../core/services/transaction.service';
 })
 export class MySales implements OnInit {
   transactions: any[] = [];
-  sellerId = 'i3sjwuEcszRiB0LpLz6N';
+  codigoIngresadoMap: { [key: string]: string } = {};
+  private readonly defaultSellerId = 'i3sjwuEcszRiB0LpLz6N';
 
   constructor(
     private transactionService: TransactionService,
+    private postService: PostService,
+    private authService: AuthService,
     private ngZone: NgZone
   ) {}
 
   ngOnInit(): void {
-    this.transactionService.getTransactionsBySeller(this.sellerId).subscribe({
+    const user = this.authService.getCurrentUser();
+    const sellerId = user?.id ?? this.defaultSellerId;
+
+    this.transactionService.getTransactionsBySeller(sellerId).pipe(
+      switchMap(txs => {
+        if (!txs.length) return of([]);
+        return forkJoin(
+          txs.map(t =>
+            this.postService.getPostById(t.postId).pipe(
+              take(1),
+              map(post => ({ ...t, titulo: post?.titulo ?? t.postId }))
+            )
+          )
+        );
+      })
+    ).subscribe({
       next: (txs) => {
-        console.log('Mis ventas recibidas', txs);
         this.ngZone.run(() => {
-          this.transactions = txs.map(t => ({ ...t, codigoIngresado: '' }));
+          this.transactions = txs;
         });
       },
-      error: (err) => {
-        console.error('Error al cargar mis ventas', err);
-      }
+      error: (err) => console.error('Error al cargar mis ventas', err)
     });
   }
 
-  validarCodigo(transaction: any, inputCodigo: string): void {
+  validarCodigo(transaction: any): void {
+    const inputCodigo = this.codigoIngresadoMap[transaction.id] ?? '';
     if (inputCodigo === transaction.codigo) {
       this.transactionService.updateTransactionStatus(transaction.id, 'completado')
         .then(() => {

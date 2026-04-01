@@ -28,4 +28,21 @@ export class PostService {
     const ref = doc(this.firestore, `posts/${postId}`);
     return updateDoc(ref, { estado });
   }
+
+  getPostById(postId: string): Observable<Post | null> {
+    const ref = doc(this.firestore, `posts/${postId}`);
+    return new Observable<Post | null>(subscriber => {
+      const unsubscribe = onSnapshot(ref, {
+        next: (snap) => {
+          if (snap.exists()) {
+            subscriber.next({ id: snap.id, ...snap.data() } as Post);
+          } else {
+            subscriber.next(null);
+          }
+        },
+        error: (err) => subscriber.error(err)
+      });
+      return () => unsubscribe();
+    });
+  }
 }

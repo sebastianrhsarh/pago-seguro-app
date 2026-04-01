@@ -39,7 +39,8 @@ export class PostItem implements OnInit, OnChanges {
     console.log('post from @Input:', this.post);
     console.log('post.estado actual:', post?.estado);
 
-    const buyerId = 'user_1';
+    const user = this.authService.getCurrentUser();
+    const buyerId = user?.id ?? 'user_1';
 
     if (!post) {
       console.error('No hay post disponible para comprar');

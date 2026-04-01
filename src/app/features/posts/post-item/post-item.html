@@ -3,14 +3,14 @@
     <h3>{{ post.titulo }}</h3>
     <p class="price">${{ post.precio }}</p>
     <p class="status">{{ post.estado }}</p>
-    <p class="debug">estado === "disponible"? {{ post?.estado === 'disponible' }}</p>
     <button
+      *ngIf="post.estado === 'disponible'"
       class="buy-button"
       (click)="comprar(post)"
-      [disabled]="false"
     >
       Comprar
     </button>
+    <span *ngIf="post.estado !== 'disponible'" class="sold-badge">Vendido</span>
   </div>
 </ng-container>
 

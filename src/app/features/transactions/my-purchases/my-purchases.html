@@ -3,10 +3,17 @@
 
   <ng-container *ngIf="transactions && transactions.length > 0; else sinCompras">
     <div *ngFor="let t of transactions" class="purchase-card">
-      <p><strong>Producto:</strong> {{ t.postId }}</p>
-      <p><strong>Monto:</strong> {{ t.monto }}</p>
-      <p><strong>Estado:</strong> {{ t.estado }}</p>
-      <p *ngIf="t.codigo"><strong>Código:</strong> {{ t.codigo }}</p>
+      <p><strong>Producto:</strong> {{ t.titulo }}</p>
+      <p><strong>Monto:</strong> ${{ t.monto }}</p>
+      <p>
+        <strong>Estado:</strong>
+        <span class="badge" [class.pending]="t.estado === 'pendiente'" [class.completed]="t.estado === 'completado'">
+          {{ t.estado }}
+        </span>
+      </p>
+      <p *ngIf="t.codigo" class="code">
+        🔐 Código: <strong>{{ t.codigo }}</strong>
+      </p>
     </div>
   </ng-container>
 
