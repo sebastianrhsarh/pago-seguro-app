@@ -1,0 +1,37 @@
+.my-sales {
+  padding: 1rem;
+}
+
+.sale-card {
+  border: 1px solid #cccbcb;
+  border-radius: 8px;
+  padding: 0.8rem;
+  margin-bottom: 0.8rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,.08);
+}
+
+.sale-card .confirm {
+  margin-top: .6rem;
+}
+
+.sale-card input {
+  padding: .4rem .6rem;
+  border: 1px solid #dadada;
+  border-radius: 4px;
+  margin-right: .5rem;
+}
+
+.sale-card button {
+  padding: .45rem .8rem;
+  border: none;
+  background: #0084ff;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.sale-card .completed {
+  color: #0f9c0f;
+  font-weight: bold;
+  margin-top: .6rem;
+}

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, addDoc, query, where, onSnapshot } from '@angular/fire/firestore';
+import { Firestore, collection, addDoc, query, where, onSnapshot, doc, updateDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -27,5 +27,24 @@ export class TransactionService {
 
       return () => unsubscribe();
     });
+  }
+
+  getTransactionsBySeller(sellerId: string): Observable<any[]> {
+    const transactionsCollection = collection(this.firestore, 'transactions');
+    const q = query(transactionsCollection, where('sellerId', '==', sellerId));
+
+    return new Observable<any[]>(subscriber => {
+      const unsubscribe = onSnapshot(q, snap => {
+        const items = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        subscriber.next(items);
+      }, err => subscriber.error(err));
+
+      return () => unsubscribe();
+    });
+  }
+
+  updateTransactionStatus(transactionId: string, estado: string): Promise<void> {
+    const ref = doc(this.firestore, `transactions/${transactionId}`);
+    return updateDoc(ref, { estado });
   }
 }

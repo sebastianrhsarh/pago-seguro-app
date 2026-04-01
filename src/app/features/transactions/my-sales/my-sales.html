@@ -1,0 +1,28 @@
+<div class="my-sales">
+  <h2>Mis Ventas</h2>
+
+  <ng-container *ngIf="transactions && transactions.length > 0; else sinVentas">
+    <div *ngFor="let t of transactions" class="sale-card">
+      <p><strong>Producto:</strong> {{ t.postId }}</p>
+      <p><strong>Monto:</strong> {{ t.monto }}</p>
+      <p><strong>Estado:</strong> {{ t.estado }}</p>
+
+      <div *ngIf="t.estado === 'pendiente'" class="confirm">
+        <input
+          type="text"
+          [(ngModel)]="t.codigoIngresado"
+          placeholder="Ingresar código"
+        />
+        <button (click)="validarCodigo(t, t.codigoIngresado)">Confirmar entrega</button>
+      </div>
+
+      <p *ngIf="t.estado === 'completado'" class="completed">
+        ✅ Entrega confirmada
+      </p>
+    </div>
+  </ng-container>
+
+  <ng-template #sinVentas>
+    <p>No hay ventas registradas.</p>
+  </ng-template>
+</div>
