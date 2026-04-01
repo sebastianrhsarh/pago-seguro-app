@@ -19,6 +19,7 @@ export class CreatePostComponent {
 
   isSubmitting = false;
   errorMessage = '';
+  successMessage = '';
 
   private readonly authService = inject(AuthService);
   private readonly postService = inject(PostService);
@@ -38,6 +39,7 @@ export class CreatePostComponent {
 
     this.isSubmitting = true;
     this.errorMessage = '';
+    this.successMessage = '';
 
     try {
       await this.postService.createPost({
@@ -49,7 +51,8 @@ export class CreatePostComponent {
         createdAt: new Date(),
       });
 
-      await this.router.navigate(['/']);
+      this.resetForm();
+      this.successMessage = 'Producto publicado correctamente. Queda disponible en Productos y aparece al final de la lista.';
     } catch (error) {
       this.errorMessage = error instanceof Error
         ? error.message
@@ -67,5 +70,11 @@ export class CreatePostComponent {
       this.precio > 0 &&
       !this.isSubmitting
     );
+  }
+
+  private resetForm(): void {
+    this.titulo = '';
+    this.descripcion = '';
+    this.precio = null;
   }
 }

@@ -53,11 +53,11 @@ body {
   position: relative;
 }
 
-.main-links a:first-child {
+.main-links a.active-link {
   color: #2563eb;
 }
 
-.main-links a:first-child::after {
+.main-links a.active-link::after {
   content: '';
   position: absolute;
   left: 0;

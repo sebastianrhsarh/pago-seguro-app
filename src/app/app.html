@@ -2,11 +2,11 @@
   <a class="brand" routerLink="/">TrustMarket</a>
 
   <div class="main-links">
-    <a routerLink="/">Productos</a>
+    <a routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{ exact: true }">Productos</a>
     @if (user$ | async) {
-      <a routerLink="/crear-post">Publicar</a>
-      <a routerLink="/mis-compras">Mis Compras</a>
-      <a routerLink="/mis-ventas">Mis Ventas</a>
+      <a routerLink="/crear-post" routerLinkActive="active-link">Publicar</a>
+      <a routerLink="/mis-compras" routerLinkActive="active-link">Mis Compras</a>
+      <a routerLink="/mis-ventas" routerLinkActive="active-link">Mis Ventas</a>
     }
   </div>
 

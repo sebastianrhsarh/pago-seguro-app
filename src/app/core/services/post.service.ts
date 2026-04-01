@@ -17,7 +17,18 @@ export class PostService {
     return new Observable<Post[]>(subscriber => {
       const unsubscribe = onSnapshot(q, {
         next: (snap) => {
-          const items = snap.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Post[];
+          const items = snap.docs
+            .map(doc => ({ id: doc.id, ...doc.data() }) as Post)
+            .sort((left, right) => {
+              const statusDifference = this.getStatusPriority(left.estado) - this.getStatusPriority(right.estado);
+
+              if (statusDifference !== 0) {
+                return statusDifference;
+              }
+
+              return this.getCreatedAtMs(left.createdAt) - this.getCreatedAtMs(right.createdAt);
+            });
+
           subscriber.next(items);
         },
         error: (err) => subscriber.error(err)
@@ -62,5 +73,36 @@ export class PostService {
     }
 
     return { id: snap.id, ...snap.data() } as Post;
+  }
+
+  private getCreatedAtMs(value: unknown): number {
+    if (value instanceof Date) {
+      return value.getTime();
+    }
+
+    if (typeof value === 'object' && value !== null && 'toDate' in value && typeof value.toDate === 'function') {
+      const date = value.toDate();
+      return date instanceof Date ? date.getTime() : 0;
+    }
+
+    if (typeof value === 'string' || typeof value === 'number') {
+      const date = new Date(value);
+      return Number.isNaN(date.getTime()) ? 0 : date.getTime();
+    }
+
+    return 0;
+  }
+
+  private getStatusPriority(estado: Post['estado']): number {
+    switch (estado) {
+      case 'disponible':
+        return 0;
+      case 'reservado':
+        return 1;
+      case 'vendido':
+        return 2;
+      default:
+        return 99;
+    }
   }
 }
