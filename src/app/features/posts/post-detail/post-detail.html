@@ -1,15 +1,9 @@
 @if (post) {
-  <div class="detail-topbar">
-    <button class="icon-btn" (click)="goBack()" aria-label="Volver">
-      ←
-    </button>
-    <span class="detail-brand">TrustMarket</span>
-    <button class="icon-btn" aria-label="Compartir">
-      ↗
-    </button>
-  </div>
-
   <section class="detail-wrap">
+    <button class="back-btn" (click)="goBack()" aria-label="Volver">
+      ← Volver
+    </button>
+
     <article class="product-hero">
       <div class="status-chip" [class.disponible]="post.estado === 'disponible'" [class.reservado]="post.estado === 'reservado'" [class.vendido]="post.estado === 'vendido'">
         {{ post.estado }}

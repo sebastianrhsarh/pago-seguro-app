@@ -1,26 +1,27 @@
-@if (!isDetailRoute()) {
-  <nav class="main-nav">
-    <a class="brand" routerLink="/">TrustMarket</a>
+<nav class="main-nav">
+  <a class="brand" routerLink="/">TrustMarket</a>
 
-    <div class="main-links">
-      <a routerLink="/">Explorar</a>
-      <a routerLink="/crear-post">Publicar</a>
-      <a routerLink="/mis-compras">Mis Compras</a>
-      <a routerLink="/mis-ventas">Mis Ventas</a>
-    </div>
+  <div class="main-links">
+    <a routerLink="/">Explorar</a>
+    <a routerLink="/crear-post">Publicar</a>
+    <a routerLink="/mis-compras">Mis Compras</a>
+    <a routerLink="/mis-ventas">Mis Ventas</a>
+  </div>
 
-    <div class="nav-actions">
-      @if (user$ | async; as user) {
-        <span class="nav-user">{{ user.email }}</span>
-        <button type="button" class="logout-btn" (click)="logout()" aria-label="Cerrar sesion">
-          ↪
-        </button>
-      } @else {
-        <a class="login-link" routerLink="/login">Login</a>
-      }
-    </div>
-  </nav>
-}
+  <div class="nav-actions">
+    @if (user$ | async; as user) {
+      <span class="nav-user">{{ user.email }}</span>
+      <button type="button" class="logout-btn" (click)="logout()" aria-label="Cerrar sesion">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M9 3h7a2 2 0 0 1 2 2v4h-2V5H9v14h7v-4h2v4a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z" />
+          <path d="M13.5 12a1 1 0 0 1 1-1h5.1l-1.8-1.8a1 1 0 1 1 1.4-1.4l3.5 3.5a1 1 0 0 1 0 1.4l-3.5 3.5a1 1 0 0 1-1.4-1.4l1.8-1.8h-5.1a1 1 0 0 1-1-1Z" />
+        </svg>
+      </button>
+    } @else {
+      <a class="login-link" routerLink="/login">Login</a>
+    }
+  </div>
+</nav>
 
 <main class="page-content">
   <router-outlet></router-outlet>

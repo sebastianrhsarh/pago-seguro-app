@@ -25,8 +25,4 @@ export class App {
     await this.authService.logout();
     await this.router.navigate(['/login']);
   }
-
-  protected isDetailRoute(): boolean {
-    return this.router.url.startsWith('/producto/');
-  }
 }
