@@ -1,42 +1,93 @@
 <section class="create-post-page">
-  <form class="create-post-card" (ngSubmit)="publicar()">
-    <h2>Publicar producto</h2>
+  <div class="create-post-shell">
+    <header class="create-post-header">
+      <h1>Publicar Producto</h1>
+      <p>Completa los detalles para que otros usuarios puedan ver tu oferta.</p>
+    </header>
 
-    <label for="titulo">Titulo</label>
-    <input
-      id="titulo"
-      name="titulo"
-      type="text"
-      [(ngModel)]="titulo"
-      required
-      placeholder="Ej: iPhone 13"
-    />
+    <div class="create-post-card">
+      <form class="create-post-form" (ngSubmit)="publicar()" autocomplete="off">
+        <div class="field-group">
+          <label for="titulo">Título del producto</label>
+          <input
+            id="titulo"
+            name="titulo"
+            type="text"
+            [(ngModel)]="titulo"
+            required
+            placeholder="ej: iPhone 13"
+          />
+        </div>
 
-    <label for="descripcion">Descripcion</label>
-    <textarea
-      id="descripcion"
-      name="descripcion"
-      [(ngModel)]="descripcion"
-      required
-      rows="4"
-      placeholder="Describe el estado y detalles del producto"
-    ></textarea>
+        <div class="field-group">
+          <label for="precio">Precio ($)</label>
+          <div class="price-input">
+            <span>$</span>
+            <input
+              id="precio"
+              name="precio"
+              type="number"
+              min="1"
+              [(ngModel)]="precio"
+              required
+              placeholder="ej: 500000"
+            />
+          </div>
+        </div>
 
-    <label for="precio">Precio</label>
-    <input
-      id="precio"
-      name="precio"
-      type="number"
-      min="1"
-      [(ngModel)]="precio"
-      required
-      placeholder="Ej: 500000"
-    />
+        <div class="field-group">
+          <label for="descripcion">Descripción</label>
+          <textarea
+            id="descripcion"
+            name="descripcion"
+            [(ngModel)]="descripcion"
+            required
+            rows="4"
+            placeholder="Describe el estado, accesorios incluidos y cualquier detalle relevante..."
+          ></textarea>
+        </div>
 
-    @if (errorMessage) {
-      <p class="error-message">{{ errorMessage }}</p>
-    }
+        <div class="photo-placeholder" aria-hidden="true">
+          <svg viewBox="0 0 24 24" focusable="false">
+            <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M9 4.25H6.75A2.75 2.75 0 0 0 4 7v10.25A2.75 2.75 0 0 0 6.75 20h10.5A2.75 2.75 0 0 0 20 17.25V7a2.75 2.75 0 0 0-2.75-2.75H15l-1.05-1.5h-3.9L9 4.25Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <p class="photo-title">Añadir fotos <span>(opcional)</span></p>
+          <p class="photo-copy">Sube hasta 5 imágenes nítidas de tu producto</p>
+        </div>
 
-    <button type="submit" [disabled]="!canSubmit">Publicar</button>
-  </form>
+        @if (errorMessage) {
+          <p class="error-message">{{ errorMessage }}</p>
+        }
+
+        <button type="submit" [disabled]="!canSubmit">
+          {{ isSubmitting ? 'PUBLICANDO...' : 'PUBLICAR PRODUCTO' }}
+        </button>
+      </form>
+    </div>
+
+    <div class="create-post-tips">
+      <article class="tip-card tip-card--primary">
+        <svg viewBox="0 0 24 24" focusable="false">
+          <path d="M12 3.25 5.5 6v4.1c0 4.23 2.82 8.16 6.5 9.65 3.68-1.49 6.5-5.42 6.5-9.65V6L12 3.25Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="m9.75 11.75 1.5 1.5 3-3.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <div>
+          <h2>Venta Protegida</h2>
+          <p>Tu dinero está seguro hasta que el comprador recibe el producto.</p>
+        </div>
+      </article>
+
+      <article class="tip-card tip-card--neutral">
+        <svg viewBox="0 0 24 24" focusable="false">
+          <path d="M12 3.5a6.5 6.5 0 0 1 6.5 6.5c0 2.39-1.3 4.47-3.22 5.59V17a1 1 0 0 1-1 1h-4.56a1 1 0 0 1-1-1v-1.41A6.47 6.47 0 0 1 5.5 10 6.5 6.5 0 0 1 12 3.5Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M9.5 20.5h5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <div>
+          <h2>Tip de Venta</h2>
+          <p>Usa buena iluminación en tus fotos para vender hasta un 40% más rápido.</p>
+        </div>
+      </article>
+    </div>
+  </div>
 </section>

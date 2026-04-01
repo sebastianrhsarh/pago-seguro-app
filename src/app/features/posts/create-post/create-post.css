@@ -1,54 +1,264 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
 .create-post-page {
+  width: 100%;
+  min-height: calc(100vh - 110px);
   display: flex;
+  align-items: center;
   justify-content: center;
-  padding: 1rem;
+}
+
+.create-post-shell {
+  width: 100%;
+  max-width: 720px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.create-post-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.create-post-header h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #191c1d;
+  margin: 0;
+}
+
+.create-post-header p {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: #7a8093;
 }
 
 .create-post-card {
   width: 100%;
-  max-width: 520px;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-  padding: 20px;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(25, 28, 29, 0.05), 0 1px 3px rgba(25, 28, 29, 0.04);
+  padding: 1.35rem 1.4rem;
+}
+
+.create-post-form {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 1rem;
 }
 
-.create-post-card h2 {
-  margin: 0 0 4px;
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
 }
 
-.create-post-card label {
-  font-weight: 600;
+.field-group label {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #4f5567;
 }
 
-.create-post-card input,
-.create-post-card textarea {
-  border: 1px solid #d9dde3;
-  border-radius: 8px;
-  padding: 0.7rem 0.8rem;
+.field-group input,
+.field-group textarea {
+  width: 100%;
   font: inherit;
+  color: #191c1d;
+  background: #ffffff;
+  border: 1.5px solid rgba(195, 198, 215, 0.58);
+  border-radius: 12px;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
-.create-post-card button {
-  margin-top: 6px;
+.field-group input {
+  height: 3rem;
+  padding: 0 1rem;
+}
+
+.field-group textarea {
+  min-height: 6rem;
+  max-height: 6rem;
+  resize: none;
+  padding: 0.9rem 1rem;
+}
+
+.field-group input::placeholder,
+.field-group textarea::placeholder {
+  color: #b2b7c6;
+}
+
+.field-group input:focus,
+.field-group textarea:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+}
+
+.price-input {
+  position: relative;
+}
+
+.price-input span {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #8b92a5;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.price-input input {
+  padding-left: 2rem;
+}
+
+.photo-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 8.25rem;
+  border: 1.5px dashed rgba(195, 198, 215, 0.8);
+  border-radius: 12px;
+  background: rgba(248, 249, 250, 0.65);
+  text-align: center;
+  color: #97a0b4;
+}
+
+.photo-placeholder svg {
+  width: 2rem;
+  height: 2rem;
+  margin-bottom: 0.45rem;
+}
+
+.photo-title {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #5a6172;
+}
+
+.photo-title span {
+  font-weight: 500;
+  color: #97a0b4;
+}
+
+.photo-copy {
+  margin: 0.2rem 0 0;
+  font-size: 0.75rem;
+  color: #a0a8ba;
+}
+
+.create-post-form button {
   border: none;
-  border-radius: 8px;
-  padding: 0.7rem 1rem;
-  background: #0b63f6;
-  color: white;
-  font-weight: 600;
+  border-radius: 10px;
+  padding: 0.98rem 1rem;
+  background: linear-gradient(180deg, #2a67ec 0%, #0f57e3 100%);
+  color: #ffffff;
+  font-size: 0.875rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.18);
   cursor: pointer;
 }
 
-.create-post-card button:disabled {
-  opacity: 0.5;
+.create-post-form button:disabled {
+  opacity: 0.55;
   cursor: not-allowed;
+  box-shadow: none;
 }
 
 .error-message {
+  margin: 0;
+  padding: 0.7rem 0.85rem;
+  border-radius: 10px;
+  background: #fff1f1;
+  border: 1px solid rgba(198, 40, 40, 0.15);
   color: #c62828;
-  margin: 2px 0;
+  font-size: 0.8125rem;
+}
+
+.create-post-tips {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.tip-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem 1.05rem;
+  border-radius: 12px;
+}
+
+.tip-card svg {
+  width: 1.15rem;
+  height: 1.15rem;
+  flex: 0 0 auto;
+  margin-top: 0.1rem;
+}
+
+.tip-card h2 {
+  margin: 0 0 0.2rem;
+  font-size: 0.8125rem;
+  font-weight: 800;
+}
+
+.tip-card p {
+  margin: 0;
+  font-size: 0.75rem;
+  line-height: 1.45;
+}
+
+.tip-card--primary {
+  background: #eef4ff;
+  color: #2563eb;
+}
+
+.tip-card--primary h2 {
+  color: #2563eb;
+}
+
+.tip-card--primary p {
+  color: #6d8fdd;
+}
+
+.tip-card--neutral {
+  background: #f4f5f7;
+  color: #7b8398;
+}
+
+.tip-card--neutral h2 {
+  color: #3a4050;
+}
+
+.tip-card--neutral p {
+  color: #7b8398;
+}
+
+@media (max-width: 768px) {
+  .create-post-page {
+    min-height: auto;
+    align-items: flex-start;
+  }
+
+  .create-post-shell {
+    gap: 1rem;
+  }
+
+  .create-post-card {
+    padding: 1.15rem;
+  }
+
+  .create-post-tips {
+    grid-template-columns: 1fr;
+  }
 }
