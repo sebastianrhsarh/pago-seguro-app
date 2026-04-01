@@ -1,0 +1,42 @@
+<section class="create-post-page">
+  <form class="create-post-card" (ngSubmit)="publicar()">
+    <h2>Publicar producto</h2>
+
+    <label for="titulo">Titulo</label>
+    <input
+      id="titulo"
+      name="titulo"
+      type="text"
+      [(ngModel)]="titulo"
+      required
+      placeholder="Ej: iPhone 13"
+    />
+
+    <label for="descripcion">Descripcion</label>
+    <textarea
+      id="descripcion"
+      name="descripcion"
+      [(ngModel)]="descripcion"
+      required
+      rows="4"
+      placeholder="Describe el estado y detalles del producto"
+    ></textarea>
+
+    <label for="precio">Precio</label>
+    <input
+      id="precio"
+      name="precio"
+      type="number"
+      min="1"
+      [(ngModel)]="precio"
+      required
+      placeholder="Ej: 500000"
+    />
+
+    @if (errorMessage) {
+      <p class="error-message">{{ errorMessage }}</p>
+    }
+
+    <button type="submit" [disabled]="!canSubmit">Publicar</button>
+  </form>
+</section>

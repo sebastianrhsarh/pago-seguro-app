@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, query, onSnapshot, doc, updateDoc } from '@angular/fire/firestore';
+import { Firestore, collection, query, onSnapshot, doc, updateDoc, addDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Post } from '../../shared/models/post.interface';
+
+export type CreatePostPayload = Omit<Post, 'id'>;
 
 @Injectable({
   providedIn: 'root'
@@ -27,6 +29,11 @@ export class PostService {
   updatePostStatus(postId: string, estado: string) {
     const ref = doc(this.firestore, `posts/${postId}`);
     return updateDoc(ref, { estado });
+  }
+
+  createPost(post: CreatePostPayload) {
+    const postsRef = collection(this.firestore, 'posts');
+    return addDoc(postsRef, post);
   }
 
   getPostById(postId: string): Observable<Post | null> {

@@ -1,0 +1,54 @@
+.create-post-page {
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.create-post-card {
+  width: 100%;
+  max-width: 520px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.create-post-card h2 {
+  margin: 0 0 4px;
+}
+
+.create-post-card label {
+  font-weight: 600;
+}
+
+.create-post-card input,
+.create-post-card textarea {
+  border: 1px solid #d9dde3;
+  border-radius: 8px;
+  padding: 0.7rem 0.8rem;
+  font: inherit;
+}
+
+.create-post-card button {
+  margin-top: 6px;
+  border: none;
+  border-radius: 8px;
+  padding: 0.7rem 1rem;
+  background: #0b63f6;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.create-post-card button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.error-message {
+  color: #c62828;
+  margin: 2px 0;
+}
