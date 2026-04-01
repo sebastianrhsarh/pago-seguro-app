@@ -81,7 +81,6 @@ body {
 .brand-logo {
   width: 170px;
   height: auto;
-  max-height: 38px;
   object-fit: contain;
 }
 
@@ -116,43 +115,58 @@ body {
   gap: 0.65rem;
 }
 
-.nav-user {
-  color: #475569;
+.user-menu {
+  position: relative;
+}
+
+.icon-btn {
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 999px;
+  padding: 0;
+}
+
+.icon-btn:hover {
+  background: #f1f5f9;
+}
+
+.icon-btn svg {
+  width: 24px;
+  height: 24px;
+}
+
+.user-tooltip {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  background: #111827;
+  color: #f8fafc;
   font-size: 11px;
   font-weight: 600;
-  max-width: 150px;
-  overflow: hidden;
-  text-overflow: ellipsis;
   white-space: nowrap;
+  border-radius: 8px;
+  padding: 0.35rem 0.5rem;
+  opacity: 0;
+  transform: translateY(-4px);
+  pointer-events: none;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  z-index: 30;
+}
+
+.user-menu:hover .user-tooltip,
+.user-menu:focus-within .user-tooltip {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .login-link {
   font-weight: 700;
-}
-
-.logout-btn {
-  border: none;
-  border-radius: 999px;
-  width: 28px;
-  height: 28px;
-  background: transparent;
-  color: #0f172a;
-  font-weight: 600;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-}
-
-.logout-btn:hover {
-  background: #e8edf5;
-}
-
-.logout-btn svg {
-  width: 17px;
-  height: 17px;
-  fill: #334155;
 }
 
 .page-content {
@@ -173,7 +187,7 @@ body {
 
   .brand-logo {
     width: 142px;
-    max-height: 32px;
+    height: auto;
   }
 
   .main-links {
@@ -184,8 +198,13 @@ body {
     gap: 0.9rem 1.1rem;
   }
 
-  .nav-user {
-    max-width: 120px;
+  .nav-actions {
+    margin-left: auto;
+    justify-content: flex-end;
+  }
+
+  .user-tooltip {
+    display: none;
   }
 }
 
