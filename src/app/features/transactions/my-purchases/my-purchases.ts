@@ -87,9 +87,7 @@ export class MyPurchases implements OnInit {
       this.transactionService.updateTransactionStatus(transaction.id, 'cancelado'),
       this.postService.updatePostStatus(transaction.postId, 'disponible')
     ])
-      .then(() => {
-        console.log('Compra cancelada y producto disponible nuevamente', transaction.id);
-      })
+      .then(() => {})
       .catch((err) => {
         console.error('Error cancelando compra', err);
       });

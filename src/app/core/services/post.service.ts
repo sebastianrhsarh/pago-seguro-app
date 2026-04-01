@@ -67,11 +67,8 @@ export class PostService {
   }
 
   async getPostByIdOnce(postId: string): Promise<Post | null> {
-    console.info('[PostService] getPostByIdOnce start:', postId);
     const ref = this.inContext(() => doc(this.firestore, `posts/${postId}`));
     const snap = await this.inContext(() => getDoc(ref));
-
-    console.info('[PostService] getPostByIdOnce snap.exists:', snap.exists());
 
     if (!snap.exists()) {
       return null;

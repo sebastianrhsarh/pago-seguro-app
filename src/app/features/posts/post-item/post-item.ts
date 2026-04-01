@@ -25,14 +25,11 @@ export class PostItem implements OnInit, OnChanges {
 
   ngOnInit(): void {}
 
-  ngOnChanges(changes: SimpleChanges): void {}
+  ngOnChanges(_: SimpleChanges): void {}
 
   onCardClick(post: any): void {
     if (post?.id) {
-      console.info('[PostItem] Navegando a detalle:', post.id);
       this.router.navigate(['/producto', post.id]);
-    } else {
-      console.warn('[PostItem] Click sin id de producto', post);
     }
   }
 }

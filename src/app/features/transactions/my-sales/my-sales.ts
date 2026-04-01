@@ -103,7 +103,6 @@ export class MySales implements OnInit {
       ])
         .then(() => {
           this.feedbackMap[transaction.id] = '';
-          console.log('Transacción completada y post marcado como vendido', transaction.id);
         })
         .catch(err => {
           this.feedbackMap[transaction.id] = 'No se pudo confirmar la entrega. Intenta nuevamente.';

@@ -34,7 +34,6 @@ export class PostDetailComponent {
 
   async ngOnInit(): Promise<void> {
     const postId = this.route.snapshot.paramMap.get('id');
-    console.info('[PostDetail] Init, id:', postId);
 
     if (!postId) {
       this.ngZone.run(() => {
@@ -52,8 +51,6 @@ export class PostDetailComponent {
         })
       ]);
 
-      console.info('[PostDetail] Resultado getPostByIdOnce:', loadedPost ? 'ok' : 'null');
-
       this.ngZone.run(() => {
         this.post = loadedPost;
         if (!loadedPost) {
@@ -61,8 +58,7 @@ export class PostDetailComponent {
         }
         this.cdr.detectChanges();
       });
-    } catch (error) {
-      console.error('[PostDetail] Error cargando producto:', error);
+    } catch {
       this.ngZone.run(() => {
         this.errorMessage = 'No pudimos cargar este producto.';
         this.cdr.detectChanges();
@@ -72,7 +68,6 @@ export class PostDetailComponent {
         this.isLoading = false;
         this.cdr.detectChanges();
       });
-      console.info('[PostDetail] Fin carga, isLoading=false');
     }
   }
 
