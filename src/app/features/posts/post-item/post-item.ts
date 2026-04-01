@@ -1,5 +1,6 @@
 import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { TransactionService } from '../../../core/services/transaction.service';
 import { PostService } from '../../../core/services/post.service';
 import { AuthService } from '../../../core/services/auth.service';
@@ -17,7 +18,8 @@ export class PostItem implements OnInit, OnChanges {
   constructor(
     private transactionService: TransactionService,
     private postService: PostService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {
     console.log('PostItem constructor');
   }
@@ -43,7 +45,12 @@ export class PostItem implements OnInit, OnChanges {
       return;
     }
 
-    const buyerId = this.authService.getCurrentUserId() ?? this.authService.getDemoBuyerId();
+    const buyerId = this.authService.getCurrentUserId();
+    if (!buyerId) {
+      console.error('Debes iniciar sesión');
+      this.router.navigate(['/login']);
+      return;
+    }
 
     if (post.sellerId === buyerId) {
       console.error('No puedes comprar tu propio producto');

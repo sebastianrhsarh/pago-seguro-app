@@ -1,5 +1,6 @@
 import { Component, OnInit, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { TransactionService } from '../../../core/services/transaction.service';
 import { PostService } from '../../../core/services/post.service';
 import { AuthService } from '../../../core/services/auth.service';
@@ -19,11 +20,16 @@ export class MyPurchases implements OnInit {
     private transactionService: TransactionService,
     private postService: PostService,
     private authService: AuthService,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
-    const buyerId = this.authService.getCurrentUserId() ?? this.authService.getDemoBuyerId();
+    const buyerId = this.authService.getCurrentUserId();
+    if (!buyerId) {
+      this.router.navigate(['/login']);
+      return;
+    }
 
     this.transactionService.getTransactionsByBuyer(buyerId).pipe(
       switchMap(txs => {

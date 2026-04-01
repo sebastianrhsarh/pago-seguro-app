@@ -1,6 +1,7 @@
 import { Component, OnInit, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { TransactionService } from '../../../core/services/transaction.service';
 import { PostService } from '../../../core/services/post.service';
 import { AuthService } from '../../../core/services/auth.service';
@@ -21,11 +22,16 @@ export class MySales implements OnInit {
     private transactionService: TransactionService,
     private postService: PostService,
     private authService: AuthService,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
-    const sellerId = this.authService.getCurrentUserId() ?? this.authService.getDemoSellerId();
+    const sellerId = this.authService.getCurrentUserId();
+    if (!sellerId) {
+      this.router.navigate(['/login']);
+      return;
+    }
 
     this.transactionService.getTransactionsBySeller(sellerId).pipe(
       switchMap(txs => {

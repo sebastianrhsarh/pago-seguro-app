@@ -14,8 +14,6 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly demoBuyerId = 'user_1';
-  private readonly demoSellerId = 'i3sjwuEcszRiB0LpLz6N';
   public user$: Observable<User | null>;
 
   constructor(private auth: Auth) {
@@ -36,13 +34,5 @@ export class AuthService {
 
   getCurrentUserId(): string | null {
     return this.auth.currentUser?.uid ?? null;
-  }
-
-  getDemoBuyerId(): string {
-    return this.demoBuyerId;
-  }
-
-  getDemoSellerId(): string {
-    return this.demoSellerId;
   }
 }
