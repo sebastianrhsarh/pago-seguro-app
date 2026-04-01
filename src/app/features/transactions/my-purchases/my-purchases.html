@@ -1,42 +1,48 @@
 <div class="my-purchases">
   <h2>Mis Compras</h2>
 
-  <ng-container *ngIf="transactions && transactions.length > 0; else sinCompras">
-    <div *ngFor="let t of transactions" class="purchase-card">
-      <p><strong>Producto:</strong> {{ t.titulo }}</p>
-      <p><strong>Monto:</strong> ${{ t.monto }}</p>
-      <p>
-        <strong>Estado:</strong>
-        <span
-          class="badge"
-          [class.pending]="t.estado === 'pendiente'"
-          [class.completed]="t.estado === 'completado'"
-          [class.cancelado]="t.estado === 'cancelado'"
-        >
-          {{ t.estado }}
-        </span>
-      </p>
-      <p>
-        <strong>Estado del producto:</strong>
-        <span
-          class="badge post-status"
-          [class.disponible]="t.postEstado === 'disponible'"
-          [class.reservado]="t.postEstado === 'reservado'"
-          [class.vendido]="t.postEstado === 'vendido'"
-        >
-          {{ t.postEstado }}
-        </span>
-      </p>
-      <p *ngIf="t.codigo && t.estado !== 'cancelado'" class="code">
-        🔐 Código: <strong>{{ t.codigo }}</strong>
-      </p>
-      <button *ngIf="t.estado === 'pendiente'" class="cancel-button" (click)="cancelarCompra(t)">
-        Cancelar compra
-      </button>
-    </div>
-  </ng-container>
+  @if (transactions && transactions.length > 0) {
+    @for (t of transactions; track t.id) {
+      <div class="purchase-card">
+        <p><strong>Producto:</strong> {{ t.titulo }}</p>
+        <p><strong>Monto:</strong> ${{ t.monto }}</p>
+        <p>
+          <strong>Estado:</strong>
+          <span
+            class="badge"
+            [class.pending]="t.estado === 'pendiente'"
+            [class.completed]="t.estado === 'completado'"
+            [class.cancelado]="t.estado === 'cancelado'"
+          >
+            {{ t.estado }}
+          </span>
+        </p>
+        <p>
+          <strong>Estado del producto:</strong>
+          <span
+            class="badge post-status"
+            [class.disponible]="t.postEstado === 'disponible'"
+            [class.reservado]="t.postEstado === 'reservado'"
+            [class.vendido]="t.postEstado === 'vendido'"
+          >
+            {{ t.postEstado }}
+          </span>
+        </p>
 
-  <ng-template #sinCompras>
+        @if (t.codigo && t.estado !== 'cancelado') {
+          <p class="code">
+            🔐 Código: <strong>{{ t.codigo }}</strong>
+          </p>
+        }
+
+        @if (t.estado === 'pendiente') {
+          <button class="cancel-button" (click)="cancelarCompra(t)">
+            Cancelar compra
+          </button>
+        }
+      </div>
+    }
+  } @else {
     <p>No hay compras registradas.</p>
-  </ng-template>
+  }
 </div>
