@@ -8,6 +8,7 @@ body {
   padding: 0.8rem 1rem;
   border-bottom: 1px solid #dcdcdc;
   display: flex;
+  align-items: center;
   gap: 1.2rem;
 }
 
@@ -19,6 +20,12 @@ body {
 
 .main-nav a:hover {
   color: #007bff;
+}
+
+.nav-user {
+  margin-left: auto;
+  color: #5b6472;
+  font-size: 14px;
 }
 
 .page-content {

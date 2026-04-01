@@ -1,0 +1,68 @@
+.login-page {
+  display: flex;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.login-card h2 {
+  margin: 0 0 0.5rem;
+}
+
+.login-copy {
+  margin: 0 0 1rem;
+  color: #5f6b7a;
+}
+
+.field-label {
+  display: block;
+  margin: 0.75rem 0 0.35rem;
+  font-weight: 600;
+}
+
+.login-card input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid #d5dbe3;
+  border-radius: 10px;
+}
+
+.actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.actions button {
+  border: none;
+  border-radius: 10px;
+  padding: 0.8rem 1rem;
+  background: #0b63f6;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.actions button.secondary {
+  background: #0f172a;
+}
+
+.actions button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.error-message {
+  margin-top: 0.9rem;
+  color: #c62828;
+  font-size: 14px;
+}

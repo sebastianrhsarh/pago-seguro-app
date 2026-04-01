@@ -1,0 +1,31 @@
+<section class="login-page">
+  <div class="login-card">
+    <h2>Autenticacion</h2>
+    <p class="login-copy">Inicia sesion o crea una cuenta para usar Firebase Authentication.</p>
+
+    <label class="field-label" for="email">Email</label>
+    <input
+      id="email"
+      type="email"
+      [(ngModel)]="email"
+      placeholder="correo@ejemplo.com"
+      required
+    />
+
+    <label class="field-label" for="password">Password</label>
+    <input
+      id="password"
+      type="password"
+      [(ngModel)]="password"
+      placeholder="Minimo 6 caracteres"
+      required
+    />
+
+    <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
+
+    <div class="actions">
+      <button type="button" (click)="login()" [disabled]="!canSubmit">Iniciar sesion</button>
+      <button type="button" class="secondary" (click)="register()" [disabled]="!canSubmit">Registrarse</button>
+    </div>
+  </div>
+</section>
