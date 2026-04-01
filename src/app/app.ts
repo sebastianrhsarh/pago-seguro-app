@@ -1,23 +1,24 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, signal } from '@angular/core';
+import { NgOptimizedImage } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { Router, RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from './core/services/auth.service';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
-  imports: [AsyncPipe, RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [AsyncPipe, NgOptimizedImage, RouterOutlet, RouterLink, RouterLinkActive],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrl: './app.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class App {
   protected readonly title = signal('pago-seguro-frontend');
+  protected readonly logoPath = 'assets/logo.png';
   protected readonly user$;
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
 
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) {
+  constructor() {
     this.user$ = this.authService.user$;
   }
 

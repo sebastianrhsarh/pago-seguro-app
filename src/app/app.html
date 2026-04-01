@@ -1,5 +1,14 @@
 <nav class="main-nav">
-  <a class="brand" routerLink="/">TrustMarket</a>
+  <a class="brand" routerLink="/" aria-label="Inicio">
+    <img
+      [ngSrc]="logoPath"
+      alt="Pago Seguro"
+      class="brand-logo"
+      width="170"
+      height="38"
+      priority
+    />
+  </a>
 
   <div class="main-links">
     <a routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{ exact: true }">Productos</a>
