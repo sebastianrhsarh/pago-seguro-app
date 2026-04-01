@@ -1,9 +1,8 @@
 import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Post } from '../../../shared/models/post.interface';
 import { TransactionService } from '../../../core/services/transaction.service';
 import { PostService } from '../../../core/services/post.service';
-import { AuthService, User } from '../../../core/services/auth.service';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-post-item',
@@ -39,15 +38,12 @@ export class PostItem implements OnInit, OnChanges {
     console.log('post from @Input:', this.post);
     console.log('post.estado actual:', post?.estado);
 
-    const user = this.authService.getCurrentUser();
-    const buyerId = user?.role === 'buyer'
-      ? user.id
-      : this.authService.getDemoBuyerId();
-
     if (!post) {
       console.error('No hay post disponible para comprar');
       return;
     }
+
+    const buyerId = this.authService.getCurrentUserId() ?? this.authService.getDemoBuyerId();
 
     if (post.sellerId === buyerId) {
       console.error('No puedes comprar tu propio producto');

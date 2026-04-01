@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-
-export interface User {
-  id: string;
-  name: string;
-  role: 'buyer' | 'seller';
-}
+import {
+  Auth,
+  User,
+  UserCredential,
+  authState,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+} from '@angular/fire/auth';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -13,26 +16,26 @@ export interface User {
 export class AuthService {
   private readonly demoBuyerId = 'user_1';
   private readonly demoSellerId = 'i3sjwuEcszRiB0LpLz6N';
-  private userSubject = new BehaviorSubject<User | null>(null);
-  public user$ = this.userSubject.asObservable();
+  public user$: Observable<User | null>;
 
-  constructor() {
-    // TODO: reemplazar por Firebase Authentication en próxima iteración.
-    // Para el MVP mantenemos un comprador demo como usuario actual y un vendedor demo fijo.
-    const fakeUser: User = {
-      id: this.demoBuyerId,
-      name: 'Sebastian',
-      role: 'buyer'
-    };
-    this.setUser(fakeUser);
+  constructor(private auth: Auth) {
+    this.user$ = authState(this.auth);
   }
 
-  getCurrentUser(): User | null {
-    return this.userSubject.value;
+  register(email: string, password: string): Promise<UserCredential> {
+    return createUserWithEmailAndPassword(this.auth, email, password);
   }
 
-  setUser(user: User): void {
-    this.userSubject.next(user);
+  login(email: string, password: string): Promise<UserCredential> {
+    return signInWithEmailAndPassword(this.auth, email, password);
+  }
+
+  logout(): Promise<void> {
+    return signOut(this.auth);
+  }
+
+  getCurrentUserId(): string | null {
+    return this.auth.currentUser?.uid ?? null;
   }
 
   getDemoBuyerId(): string {

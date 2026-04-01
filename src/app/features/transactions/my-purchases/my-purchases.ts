@@ -23,10 +23,7 @@ export class MyPurchases implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const user = this.authService.getCurrentUser();
-    const buyerId = user?.role === 'buyer'
-      ? user.id
-      : this.authService.getDemoBuyerId();
+    const buyerId = this.authService.getCurrentUserId() ?? this.authService.getDemoBuyerId();
 
     this.transactionService.getTransactionsByBuyer(buyerId).pipe(
       switchMap(txs => {
