@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -13,17 +13,21 @@ import { PostService } from '../../../core/services/post.service';
   styleUrl: './create-post.css',
 })
 export class CreatePostComponent {
+  private static readonly REDIRECT_DELAY_MS = 3500;
+
   titulo = '';
   descripcion = '';
   precio: number | null = null;
 
   isSubmitting = false;
+  isRedirecting = false;
   errorMessage = '';
   successMessage = '';
 
   private readonly authService = inject(AuthService);
   private readonly postService = inject(PostService);
   private readonly router = inject(Router);
+  private readonly ngZone = inject(NgZone);
 
   async publicar(): Promise<void> {
     if (!this.canSubmit) {
@@ -51,14 +55,28 @@ export class CreatePostComponent {
         createdAt: new Date(),
       });
 
-      this.resetForm();
-      this.successMessage = 'Producto publicado correctamente. Queda disponible en Productos y aparece al final de la lista.';
+      this.ngZone.run(() => {
+        this.resetForm();
+        this.successMessage = 'Publicado con exito';
+        this.isRedirecting = true;
+      });
+
+      setTimeout(() => {
+        this.ngZone.run(() => {
+          this.router.navigate(['/']);
+        });
+      }, CreatePostComponent.REDIRECT_DELAY_MS);
     } catch (error) {
-      this.errorMessage = error instanceof Error
-        ? error.message
-        : 'No fue posible publicar el producto.';
+      this.ngZone.run(() => {
+        this.errorMessage = error instanceof Error
+          ? error.message
+          : 'No fue posible publicar el producto.';
+        this.isRedirecting = false;
+      });
     } finally {
-      this.isSubmitting = false;
+      this.ngZone.run(() => {
+        this.isSubmitting = false;
+      });
     }
   }
 
@@ -68,7 +86,8 @@ export class CreatePostComponent {
       !!this.descripcion.trim() &&
       this.precio !== null &&
       this.precio > 0 &&
-      !this.isSubmitting
+      !this.isSubmitting &&
+      !this.isRedirecting
     );
   }
 

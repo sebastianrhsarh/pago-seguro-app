@@ -26,7 +26,7 @@ export class PostService {
                 return statusDifference;
               }
 
-              return this.getCreatedAtMs(left.createdAt) - this.getCreatedAtMs(right.createdAt);
+              return this.getCreatedAtMs(right.createdAt) - this.getCreatedAtMs(left.createdAt);
             });
 
           subscriber.next(items);

@@ -6,6 +6,24 @@
     </header>
 
     <div class="create-post-card">
+      @if (successMessage && isRedirecting) {
+        <div class="success-overlay" role="status" aria-live="polite">
+          <div class="success-overlay__ticket">
+            <div class="success-overlay__icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="m6.75 12.5 3.25 3.25 7.25-7.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+
+            <div class="success-overlay__copy">
+              <strong>{{ successMessage }}</strong>
+              <span>Tu publicación ya quedó lista.</span>
+              <small>Redirigiendo a Productos...</small>
+            </div>
+          </div>
+        </div>
+      }
+
       <form class="create-post-form" (ngSubmit)="publicar()" autocomplete="off">
         <div class="field-group">
           <label for="titulo">Título del producto</label>
@@ -56,8 +74,18 @@
           <p class="photo-copy">Sube hasta 5 imágenes nítidas de tu producto</p>
         </div>
 
-        @if (successMessage) {
-          <p class="success-message">{{ successMessage }}</p>
+        @if (successMessage && !isRedirecting) {
+          <div class="success-ticket" role="status" aria-live="polite">
+            <div class="success-ticket__icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="m6.75 12.5 3.25 3.25 7.25-7.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+            <div class="success-ticket__copy">
+              <strong>{{ successMessage }}</strong>
+              <span>Redirigiendo a Productos...</span>
+            </div>
+          </div>
         }
 
         @if (errorMessage) {
@@ -65,7 +93,19 @@
         }
 
         <button type="submit" [disabled]="!canSubmit">
-          {{ isSubmitting ? 'PUBLICANDO...' : 'PUBLICAR PRODUCTO' }}
+          @if (isSubmitting) {
+            <span class="button-loading">
+              <span class="button-spinner" aria-hidden="true"></span>
+              <span>PUBLICANDO...</span>
+            </span>
+          } @else if (isRedirecting) {
+            <span class="button-loading">
+              <span class="button-spinner" aria-hidden="true"></span>
+              <span>REDIRIGIENDO...</span>
+            </span>
+          } @else {
+            <span>PUBLICAR PRODUCTO</span>
+          }
         </button>
       </form>
     </div>
