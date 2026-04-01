@@ -4,12 +4,15 @@
     <p class="price">${{ post.precio }}</p>
     <p class="status">{{ post.estado }}</p>
     <button
-      *ngIf="post.estado === 'disponible'"
+      *ngIf="post.estado === 'disponible' && !isOwner"
       class="buy-button"
       (click)="comprar(post)"
     >
       Comprar
     </button>
+    <p *ngIf="isOwner" class="owner-label">
+      Este es tu producto
+    </p>
     <span *ngIf="post.estado !== 'disponible'" class="sold-badge">Vendido</span>
   </div>
 </ng-container>

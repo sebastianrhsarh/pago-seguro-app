@@ -15,6 +15,11 @@ import { AuthService } from '../../../core/services/auth.service';
 export class PostItem implements OnInit, OnChanges {
   @Input() post: any = null;
 
+  get isOwner(): boolean {
+    const userId = this.authService.getCurrentUserId();
+    return !!userId && this.post?.sellerId === userId;
+  }
+
   constructor(
     private transactionService: TransactionService,
     private postService: PostService,
@@ -45,14 +50,14 @@ export class PostItem implements OnInit, OnChanges {
       return;
     }
 
-    const buyerId = this.authService.getCurrentUserId();
-    if (!buyerId) {
+    const userId = this.authService.getCurrentUserId();
+    if (!userId) {
       console.error('Debes iniciar sesión');
       this.router.navigate(['/login']);
       return;
     }
 
-    if (post.sellerId === buyerId) {
+    if (post.sellerId === userId) {
       console.error('No puedes comprar tu propio producto');
       return;
     }
@@ -61,7 +66,7 @@ export class PostItem implements OnInit, OnChanges {
     console.log('codigo transaccion generado', codigo);
 
     const transaction = {
-      buyerId,
+      buyerId: userId,
       sellerId: post.sellerId,
       postId: post.id,
       monto: post.precio,

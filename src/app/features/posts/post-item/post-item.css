@@ -39,6 +39,11 @@
   background-color: #0056b3;
 }
 
+.owner-label {
+  color: #555;
+  font-style: italic;
+}
+
 .sold-badge {
   display: inline-block;
   padding: 6px 12px;
