@@ -1,3 +1,19 @@
+@if (isAuthTransition) {
+  <section class="login-transition" aria-live="polite" aria-busy="true">
+    <img
+      src="assets/logo.png"
+      alt="Pago Seguro"
+      class="transition-logo"
+      width="1065"
+      height="315"
+      loading="eager"
+      decoding="sync"
+      fetchpriority="high"
+    />
+    <div class="transition-loader"></div>
+    <p>{{ transitionMessage }}</p>
+  </section>
+} @else {
 <section class="login-page">
 
   <!-- Main centered container -->
@@ -113,3 +129,4 @@
   </div>
 
 </section>
+}

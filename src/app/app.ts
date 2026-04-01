@@ -15,11 +15,13 @@ export class App {
   protected readonly title = signal('pago-seguro-frontend');
   protected readonly logoPath = 'assets/logo.png';
   protected readonly user$;
+  protected readonly authReady$;
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
 
   constructor() {
     this.user$ = this.authService.user$;
+    this.authReady$ = this.authService.authReady$;
   }
 
   async logout(): Promise<void> {

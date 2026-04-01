@@ -5,6 +5,38 @@
   color: #0f172a;
 }
 
+.app-bootstrap {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1.5rem;
+}
+
+.bootstrap-logo {
+  width: min(260px, 62vw);
+  height: auto;
+  object-fit: contain;
+}
+
+.bootstrap-loader {
+  width: 52px;
+  height: 52px;
+  border-radius: 999px;
+  border: 4px solid #d7e3ff;
+  border-top-color: #2563eb;
+  animation: bootstrap-spin 0.9s linear infinite;
+}
+
+.app-bootstrap p {
+  margin: 0;
+  color: #60708b;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
 body {
   margin: 0;
   font-family: Inter, "Segoe UI", sans-serif;
@@ -154,5 +186,14 @@ body {
 
   .nav-user {
     max-width: 120px;
+  }
+}
+
+@keyframes bootstrap-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }
