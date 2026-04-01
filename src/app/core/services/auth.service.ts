@@ -11,13 +11,16 @@ export interface User {
   providedIn: 'root'
 })
 export class AuthService {
+  private readonly demoBuyerId = 'user_1';
+  private readonly demoSellerId = 'i3sjwuEcszRiB0LpLz6N';
   private userSubject = new BehaviorSubject<User | null>(null);
   public user$ = this.userSubject.asObservable();
 
   constructor() {
-    // Inicializar con usuario fake
+    // TODO: reemplazar por Firebase Authentication en próxima iteración.
+    // Para el MVP mantenemos un comprador demo como usuario actual y un vendedor demo fijo.
     const fakeUser: User = {
-      id: 'user_1',
+      id: this.demoBuyerId,
       name: 'Sebastian',
       role: 'buyer'
     };
@@ -30,5 +33,13 @@ export class AuthService {
 
   setUser(user: User): void {
     this.userSubject.next(user);
+  }
+
+  getDemoBuyerId(): string {
+    return this.demoBuyerId;
+  }
+
+  getDemoSellerId(): string {
+    return this.demoSellerId;
   }
 }

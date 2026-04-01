@@ -16,7 +16,6 @@ import { switchMap, forkJoin, of, take, map } from 'rxjs';
 export class MySales implements OnInit {
   transactions: any[] = [];
   codigoIngresadoMap: { [key: string]: string } = {};
-  private readonly defaultSellerId = 'i3sjwuEcszRiB0LpLz6N';
 
   constructor(
     private transactionService: TransactionService,
@@ -27,7 +26,9 @@ export class MySales implements OnInit {
 
   ngOnInit(): void {
     const user = this.authService.getCurrentUser();
-    const sellerId = user?.id ?? this.defaultSellerId;
+    const sellerId = user?.role === 'seller'
+      ? user.id
+      : this.authService.getDemoSellerId();
 
     this.transactionService.getTransactionsBySeller(sellerId).pipe(
       switchMap(txs => {

@@ -19,9 +19,10 @@
           placeholder="Ingresar código"
         />
         <button (click)="validarCodigo(t)">Confirmar entrega</button>
+        <p class="helper-text">El comprador ve este codigo en Mis Compras y debe compartirlo contigo.</p>
       </div>
 
-      <p *ngIf="t.estado === 'completado'" class="completed">
+      <p *ngIf="t.estado === 'completado'" class="confirmation-message">
         ✅ Entrega confirmada
       </p>
     </div>

@@ -30,10 +30,16 @@
   cursor: pointer;
 }
 
-.sale-card .completed {
+.confirmation-message {
   color: #0f9c0f;
   font-weight: bold;
   margin-top: .6rem;
+}
+
+.helper-text {
+  margin-top: .6rem;
+  color: #666;
+  font-size: 13px;
 }
 
 .badge {
@@ -43,12 +49,12 @@
   display: inline-block;
 }
 
-.pending {
+.badge.pending {
   background: orange;
   color: white;
 }
 
-.completed {
+.badge.completed {
   background: green;
   color: white;
 }
