@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, query, onSnapshot } from '@angular/fire/firestore';
+import { Firestore, collection, query, onSnapshot, doc, updateDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Post } from '../../shared/models/post.interface';
 
@@ -22,5 +22,10 @@ export class PostService {
       });
       return () => unsubscribe();
     });
+  }
+
+  updatePostStatus(postId: string, estado: string) {
+    const ref = doc(this.firestore, `posts/${postId}`);
+    return updateDoc(ref, { estado });
   }
 }

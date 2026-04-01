@@ -1,6 +1,19 @@
-<div class="post-card">
-  <h3>{{ post.titulo }}</h3>
-  <p class="price">${{ post.precio }}</p>
-  <p class="status">{{ post.estado }}</p>
-  <button class="buy-button" (click)="onBuy()">Comprar</button>
-</div>
+<ng-container *ngIf="post; else cargando">
+  <div class="post-card">
+    <h3>{{ post.titulo }}</h3>
+    <p class="price">${{ post.precio }}</p>
+    <p class="status">{{ post.estado }}</p>
+    <p class="debug">estado === "disponible"? {{ post?.estado === 'disponible' }}</p>
+    <button
+      class="buy-button"
+      (click)="comprar(post)"
+      [disabled]="false"
+    >
+      Comprar
+    </button>
+  </div>
+</ng-container>
+
+<ng-template #cargando>
+  <div>Cargando post...</div>
+</ng-template>

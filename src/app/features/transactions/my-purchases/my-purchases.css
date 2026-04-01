@@ -1,0 +1,10 @@
+.my-purchases {
+  padding: 1rem;
+}
+
+.purchase-card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 0.8rem;
+  margin-bottom: 0.8rem;
+}

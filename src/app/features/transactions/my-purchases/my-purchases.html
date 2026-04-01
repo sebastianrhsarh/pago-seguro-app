@@ -1,0 +1,16 @@
+<div class="my-purchases">
+  <h2>Mis Compras</h2>
+
+  <ng-container *ngIf="transactions && transactions.length > 0; else sinCompras">
+    <div *ngFor="let t of transactions" class="purchase-card">
+      <p><strong>Producto:</strong> {{ t.postId }}</p>
+      <p><strong>Monto:</strong> {{ t.monto }}</p>
+      <p><strong>Estado:</strong> {{ t.estado }}</p>
+      <p *ngIf="t.codigo"><strong>Código:</strong> {{ t.codigo }}</p>
+    </div>
+  </ng-container>
+
+  <ng-template #sinCompras>
+    <p>No hay compras registradas.</p>
+  </ng-template>
+</div>

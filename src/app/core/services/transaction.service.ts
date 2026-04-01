@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, addDoc } from '@angular/fire/firestore';
+import { Firestore, collection, addDoc, query, where, onSnapshot } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -7,16 +8,24 @@ import { Firestore, collection, addDoc } from '@angular/fire/firestore';
 export class TransactionService {
   constructor(private firestore: Firestore) {}
 
-  async createTransaction(post: any): Promise<void> {
+  createTransaction(data: any): Promise<void> {
     const transactionsCollection = collection(this.firestore, 'transactions');
-    const transactionData = {
-      buyerId: 'user123', // Hardcodeado por ahora
-      sellerId: post.sellerId,
-      postId: post.id,
-      monto: post.precio,
-      estado: 'pendiente',
-      createdAt: new Date()
-    };
-    await addDoc(transactionsCollection, transactionData);
+    return addDoc(transactionsCollection, data).then(() => {
+      console.log('Transacción registrada en Firestore', data);
+    });
+  }
+
+  getTransactionsByBuyer(buyerId: string): Observable<any[]> {
+    const transactionsCollection = collection(this.firestore, 'transactions');
+    const q = query(transactionsCollection, where('buyerId', '==', buyerId));
+
+    return new Observable<any[]>(subscriber => {
+      const unsubscribe = onSnapshot(q, snap => {
+        const items = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        subscriber.next(items);
+      }, err => subscriber.error(err));
+
+      return () => unsubscribe();
+    });
   }
 }
