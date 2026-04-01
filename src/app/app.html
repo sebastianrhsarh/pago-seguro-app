@@ -1,6 +1,6 @@
 @if (authReady$ | async) {
   <nav class="main-nav">
-    <a class="brand" routerLink="/" aria-label="Inicio">
+    <a class="brand" [routerLink]="['/']" aria-label="Ir a productos">
       <img
         [ngSrc]="logoPath"
         alt="Pago Seguro"

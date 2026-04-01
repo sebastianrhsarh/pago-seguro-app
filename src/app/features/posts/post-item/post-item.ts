@@ -12,6 +12,9 @@ import { AuthService } from '../../../core/services/auth.service';
 })
 export class PostItem implements OnInit, OnChanges {
   @Input() post: any = null;
+  private readonly clNumberFormatter = new Intl.NumberFormat('es-CL', {
+    maximumFractionDigits: 0,
+  });
 
   get isOwner(): boolean {
     const userId = this.authService.getCurrentUserId();
@@ -31,5 +34,10 @@ export class PostItem implements OnInit, OnChanges {
     if (post?.id) {
       this.router.navigate(['/producto', post.id]);
     }
+  }
+
+  formatPrice(value: unknown): string {
+    const amount = typeof value === 'number' ? value : Number(value ?? 0);
+    return this.clNumberFormatter.format(Number.isFinite(amount) ? amount : 0);
   }
 }

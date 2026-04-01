@@ -15,7 +15,7 @@
     <section class="summary-block">
       <h1>{{ post.titulo }}</h1>
       <div class="price-line">
-        <span class="price-main">${{ post.precio | number:'1.0-0' }}</span>
+        <span class="price-main">${{ formatPrice(post.precio) }}</span>
       </div>
     </section>
 

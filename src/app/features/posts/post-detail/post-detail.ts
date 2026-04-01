@@ -15,6 +15,9 @@ import { TransactionService } from '../../../core/services/transaction.service';
 })
 export class PostDetailComponent {
   private static readonly LOAD_TIMEOUT_MS = 10000;
+  private readonly clNumberFormatter = new Intl.NumberFormat('es-CL', {
+    maximumFractionDigits: 0,
+  });
 
   post: any = null;
   isLoading = true;
@@ -153,6 +156,11 @@ export class PostDetailComponent {
       code += chars[idx];
     }
     return code;
+  }
+
+  formatPrice(value: unknown): string {
+    const amount = typeof value === 'number' ? value : Number(value ?? 0);
+    return this.clNumberFormatter.format(Number.isFinite(amount) ? amount : 0);
   }
 }
 

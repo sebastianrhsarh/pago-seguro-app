@@ -25,7 +25,7 @@
     <div class="card-copy">
       <div class="title-row">
         <h3>{{ post.titulo }}</h3>
-        <p class="price">${{ post.precio | number:'1.0-0' }}</p>
+        <p class="price">${{ formatPrice(post.precio) }}</p>
       </div>
       <p class="description">{{ post.descripcion }}</p>
     </div>
