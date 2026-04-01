@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { EnvironmentInjector, Injectable, inject, runInInjectionContext } from '@angular/core';
 import { Firestore, collection, addDoc, query, where, onSnapshot, doc, updateDoc, getDocs, UpdateData, DocumentData } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
@@ -6,62 +6,64 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class TransactionService {
+  private readonly injector = inject(EnvironmentInjector);
+
   constructor(private firestore: Firestore) {}
 
   createTransaction(data: any): Promise<void> {
-    const transactionsCollection = collection(this.firestore, 'transactions');
-    return addDoc(transactionsCollection, data).then(() => {
+    const transactionsCollection = this.inContext(() => collection(this.firestore, 'transactions'));
+    return this.inContext(() => addDoc(transactionsCollection, data)).then(() => {
       console.log('Transacción registrada en Firestore', data);
     });
   }
 
   getTransactionsByBuyer(buyerId: string): Observable<any[]> {
-    const transactionsCollection = collection(this.firestore, 'transactions');
-    const q = query(transactionsCollection, where('buyerId', '==', buyerId));
+    const transactionsCollection = this.inContext(() => collection(this.firestore, 'transactions'));
+    const q = this.inContext(() => query(transactionsCollection, where('buyerId', '==', buyerId)));
 
     return new Observable<any[]>(subscriber => {
-      const unsubscribe = onSnapshot(q, snap => {
+      const unsubscribe = this.inContext(() => onSnapshot(q, snap => {
         const items = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         subscriber.next(items);
-      }, err => subscriber.error(err));
+      }, err => subscriber.error(err)));
 
       return () => unsubscribe();
     });
   }
 
   getTransactionsBySeller(sellerId: string): Observable<any[]> {
-    const transactionsCollection = collection(this.firestore, 'transactions');
-    const q = query(transactionsCollection, where('sellerId', '==', sellerId));
+    const transactionsCollection = this.inContext(() => collection(this.firestore, 'transactions'));
+    const q = this.inContext(() => query(transactionsCollection, where('sellerId', '==', sellerId)));
 
     return new Observable<any[]>(subscriber => {
-      const unsubscribe = onSnapshot(q, snap => {
+      const unsubscribe = this.inContext(() => onSnapshot(q, snap => {
         const items = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         subscriber.next(items);
-      }, err => subscriber.error(err));
+      }, err => subscriber.error(err)));
 
       return () => unsubscribe();
     });
   }
 
   updateTransactionStatus(transactionId: string, estado: string): Promise<void> {
-    const ref = doc(this.firestore, `transactions/${transactionId}`);
-    return updateDoc(ref, { estado });
+    const ref = this.inContext(() => doc(this.firestore, `transactions/${transactionId}`));
+    return this.inContext(() => updateDoc(ref, { estado }));
   }
 
   updateTransaction(transactionId: string, data: UpdateData<DocumentData>): Promise<void> {
-    const ref = doc(this.firestore, `transactions/${transactionId}`);
-    return updateDoc(ref, data);
+    const ref = this.inContext(() => doc(this.firestore, `transactions/${transactionId}`));
+    return this.inContext(() => updateDoc(ref, data));
   }
 
   async getLatestTransactionByBuyerAndPost(buyerId: string, postId: string): Promise<any | null> {
-    const transactionsCollection = collection(this.firestore, 'transactions');
-    const q = query(
+    const transactionsCollection = this.inContext(() => collection(this.firestore, 'transactions'));
+    const q = this.inContext(() => query(
       transactionsCollection,
       where('buyerId', '==', buyerId),
       where('postId', '==', postId)
-    );
+    ));
 
-    const snap = await getDocs(q);
+    const snap = await this.inContext(() => getDocs(q));
     if (snap.empty) {
       return null;
     }
@@ -82,5 +84,9 @@ export class TransactionService {
     }
 
     return 0;
+  }
+
+  private inContext<T>(fn: () => T): T {
+    return runInInjectionContext(this.injector, fn);
   }
 }

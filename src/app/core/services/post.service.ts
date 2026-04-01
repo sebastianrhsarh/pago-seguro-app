@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { EnvironmentInjector, Injectable, inject, runInInjectionContext } from '@angular/core';
 import { Firestore, collection, query, onSnapshot, doc, updateDoc, addDoc, getDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Post } from '../../shared/models/post.interface';
@@ -9,13 +9,15 @@ export type CreatePostPayload = Omit<Post, 'id'>;
   providedIn: 'root'
 })
 export class PostService {
+  private readonly injector = inject(EnvironmentInjector);
+
   constructor(private firestore: Firestore) {}
 
   getPosts(): Observable<Post[]> {
-    const colRef = collection(this.firestore, 'posts');
-    const q = query(colRef);
+    const colRef = this.inContext(() => collection(this.firestore, 'posts'));
+    const q = this.inContext(() => query(colRef));
     return new Observable<Post[]>(subscriber => {
-      const unsubscribe = onSnapshot(q, {
+      const unsubscribe = this.inContext(() => onSnapshot(q, {
         next: (snap) => {
           const items = snap.docs
             .map(doc => ({ id: doc.id, ...doc.data() }) as Post)
@@ -32,25 +34,25 @@ export class PostService {
           subscriber.next(items);
         },
         error: (err) => subscriber.error(err)
-      });
+      }));
       return () => unsubscribe();
     });
   }
 
   updatePostStatus(postId: string, estado: string) {
-    const ref = doc(this.firestore, `posts/${postId}`);
-    return updateDoc(ref, { estado });
+    const ref = this.inContext(() => doc(this.firestore, `posts/${postId}`));
+    return this.inContext(() => updateDoc(ref, { estado }));
   }
 
   createPost(post: CreatePostPayload) {
-    const postsRef = collection(this.firestore, 'posts');
-    return addDoc(postsRef, post);
+    const postsRef = this.inContext(() => collection(this.firestore, 'posts'));
+    return this.inContext(() => addDoc(postsRef, post));
   }
 
   getPostById(postId: string): Observable<Post | null> {
-    const ref = doc(this.firestore, `posts/${postId}`);
+    const ref = this.inContext(() => doc(this.firestore, `posts/${postId}`));
     return new Observable<Post | null>(subscriber => {
-      const unsubscribe = onSnapshot(ref, {
+      const unsubscribe = this.inContext(() => onSnapshot(ref, {
         next: (snap) => {
           if (snap.exists()) {
             subscriber.next({ id: snap.id, ...snap.data() } as Post);
@@ -59,14 +61,17 @@ export class PostService {
           }
         },
         error: (err) => subscriber.error(err)
-      });
+      }));
       return () => unsubscribe();
     });
   }
 
   async getPostByIdOnce(postId: string): Promise<Post | null> {
-    const ref = doc(this.firestore, `posts/${postId}`);
-    const snap = await getDoc(ref);
+    console.info('[PostService] getPostByIdOnce start:', postId);
+    const ref = this.inContext(() => doc(this.firestore, `posts/${postId}`));
+    const snap = await this.inContext(() => getDoc(ref));
+
+    console.info('[PostService] getPostByIdOnce snap.exists:', snap.exists());
 
     if (!snap.exists()) {
       return null;
@@ -104,5 +109,9 @@ export class PostService {
       default:
         return 99;
     }
+  }
+
+  private inContext<T>(fn: () => T): T {
+    return runInInjectionContext(this.injector, fn);
   }
 }

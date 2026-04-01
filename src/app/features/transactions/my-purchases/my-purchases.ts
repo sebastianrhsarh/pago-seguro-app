@@ -1,4 +1,4 @@
-import { Component, OnInit, NgZone } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { TransactionService } from '../../../core/services/transaction.service';
@@ -35,37 +35,43 @@ export class MyPurchases implements OnInit {
     private transactionService: TransactionService,
     private postService: PostService,
     private authService: AuthService,
+    private cdr: ChangeDetectorRef,
     private ngZone: NgZone,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    const buyerId = this.authService.getCurrentUserId();
-    if (!buyerId) {
-      this.router.navigate(['/login']);
-      return;
-    }
+    this.authService.user$.pipe(
+      take(1),
+      switchMap(user => {
+        if (!user) {
+          this.router.navigate(['/login']);
+          return of([] as PurchaseTransaction[]);
+        }
 
-    this.transactionService.getTransactionsByBuyer(buyerId).pipe(
-      switchMap(txs => {
-        if (!txs.length) return of([]);
-        return forkJoin(
-          txs.map(t =>
-            this.postService.getPostById(t.postId).pipe(
-              take(1),
-              map(post => ({
-                ...t,
-                titulo: post?.titulo ?? t.postId,
-                postEstado: post?.estado ?? 'desconocido'
-              }) as PurchaseTransaction)
-            )
-          )
+        return this.transactionService.getTransactionsByBuyer(user.uid).pipe(
+          switchMap(txs => {
+            if (!txs.length) return of([] as PurchaseTransaction[]);
+            return forkJoin(
+              txs.map(t =>
+                this.postService.getPostById(t.postId).pipe(
+                  take(1),
+                  map(post => ({
+                    ...t,
+                    titulo: post?.titulo ?? t.postId,
+                    postEstado: post?.estado ?? 'desconocido'
+                  }) as PurchaseTransaction)
+                )
+              )
+            );
+          })
         );
       })
     ).subscribe({
       next: (txs) => {
         this.ngZone.run(() => {
           this.transactions = [...txs].sort((left, right) => this.getTimeValue(right.createdAt) - this.getTimeValue(left.createdAt));
+          this.cdr.detectChanges();
         });
       },
       error: (err) => console.error('Error al cargar mis compras', err)

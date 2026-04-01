@@ -1,5 +1,5 @@
 import { CommonModule, Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgZone } from '@angular/core';
 import { AuthService } from '../../../core/services/auth.service';
@@ -14,6 +14,8 @@ import { TransactionService } from '../../../core/services/transaction.service';
   styleUrl: './post-detail.css',
 })
 export class PostDetailComponent {
+  private static readonly LOAD_TIMEOUT_MS = 10000;
+
   post: any = null;
   isLoading = true;
   isProcessingPurchase = false;
@@ -23,6 +25,7 @@ export class PostDetailComponent {
     private route: ActivatedRoute,
     private router: Router,
     private location: Location,
+    private cdr: ChangeDetectorRef,
     private ngZone: NgZone,
     private postService: PostService,
     private transactionService: TransactionService,
@@ -31,6 +34,8 @@ export class PostDetailComponent {
 
   async ngOnInit(): Promise<void> {
     const postId = this.route.snapshot.paramMap.get('id');
+    console.info('[PostDetail] Init, id:', postId);
+
     if (!postId) {
       this.ngZone.run(() => {
         this.errorMessage = 'No encontramos el identificador del producto.';
@@ -40,21 +45,34 @@ export class PostDetailComponent {
     }
 
     try {
-      const loadedPost = await this.postService.getPostByIdOnce(postId);
+      const loadedPost = await Promise.race<PostLike | null>([
+        this.postService.getPostByIdOnce(postId),
+        new Promise<null>((_, reject) => {
+          setTimeout(() => reject(new Error('Timeout cargando producto.')), PostDetailComponent.LOAD_TIMEOUT_MS);
+        })
+      ]);
+
+      console.info('[PostDetail] Resultado getPostByIdOnce:', loadedPost ? 'ok' : 'null');
+
       this.ngZone.run(() => {
         this.post = loadedPost;
         if (!loadedPost) {
           this.errorMessage = 'Este producto no existe o ya no está disponible.';
         }
+        this.cdr.detectChanges();
       });
-    } catch {
+    } catch (error) {
+      console.error('[PostDetail] Error cargando producto:', error);
       this.ngZone.run(() => {
         this.errorMessage = 'No pudimos cargar este producto.';
+        this.cdr.detectChanges();
       });
     } finally {
       this.ngZone.run(() => {
         this.isLoading = false;
+        this.cdr.detectChanges();
       });
+      console.info('[PostDetail] Fin carga, isLoading=false');
     }
   }
 
@@ -142,3 +160,10 @@ export class PostDetailComponent {
     return code;
   }
 }
+
+type PostLike = {
+  id: string;
+  sellerId: string;
+  estado: string;
+  precio: number;
+};

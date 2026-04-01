@@ -21,23 +21,18 @@ export class PostItem implements OnInit, OnChanges {
   constructor(
     private authService: AuthService,
     private router: Router
-  ) {
-    console.log('PostItem constructor');
-  }
+  ) {}
 
-  ngOnInit(): void {
-    console.log('PostItem ngOnInit, post:', this.post);
-  }
+  ngOnInit(): void {}
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['post']) {
-      console.log('PostItem ngOnChanges, post actualizado:', this.post);
-    }
-  }
+  ngOnChanges(changes: SimpleChanges): void {}
 
   onCardClick(post: any): void {
     if (post?.id) {
+      console.info('[PostItem] Navegando a detalle:', post.id);
       this.router.navigate(['/producto', post.id]);
+    } else {
+      console.warn('[PostItem] Click sin id de producto', post);
     }
   }
 }
