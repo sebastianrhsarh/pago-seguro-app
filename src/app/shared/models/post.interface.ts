@@ -4,6 +4,6 @@ export interface Post {
   descripcion: string;
   precio: number;
   estado: 'disponible' | 'vendido';
-  userId: string;
+  sellerId: string;
   createdAt: Date;
 }
