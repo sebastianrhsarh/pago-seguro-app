@@ -1,31 +1,115 @@
 <section class="login-page">
-  <div class="login-card">
-    <h2>Autenticacion</h2>
-    <p class="login-copy">Inicia sesion o crea una cuenta para usar Firebase Authentication.</p>
 
-    <label class="field-label" for="email">Email</label>
-    <input
-      id="email"
-      type="email"
-      [(ngModel)]="email"
-      placeholder="correo@ejemplo.com"
-      required
-    />
+  <!-- Main centered container -->
+  <div class="login-center">
 
-    <label class="field-label" for="password">Password</label>
-    <input
-      id="password"
-      type="password"
-      [(ngModel)]="password"
-      placeholder="Minimo 6 caracteres"
-      required
-    />
-
-    <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
-
-    <div class="actions">
-      <button type="button" (click)="login()" [disabled]="!canSubmit">Iniciar sesion</button>
-      <button type="button" class="secondary" (click)="register()" [disabled]="!canSubmit">Registrarse</button>
+    <!-- Header -->
+    <div class="login-header">
+      <span class="login-brand">TrustMarket</span>
+      <h1 class="login-title">Bienvenido de nuevo</h1>
+      <p class="login-subtitle">Accede a tu cuenta en el mercado más seguro.</p>
     </div>
+
+    <!-- Card -->
+    <div class="login-card">
+
+      <!-- Email field -->
+      <div class="field-group">
+        <label class="field-label" for="email">Correo electrónico</label>
+        <div class="input-wrapper">
+          <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="2" y="4" width="20" height="16" rx="2"/>
+            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+          </svg>
+          <input
+            id="email"
+            type="email"
+            [(ngModel)]="email"
+            placeholder="tu@ejemplo.com"
+            autocomplete="email"
+            required
+          />
+        </div>
+      </div>
+
+      <!-- Password field -->
+      <div class="field-group">
+        <div class="field-label-row">
+          <label class="field-label" for="password">Contraseña</label>
+        </div>
+        <div class="input-wrapper">
+          <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+          <input
+            id="password"
+            [type]="showPassword ? 'text' : 'password'"
+            [(ngModel)]="password"
+            placeholder="••••••••"
+            autocomplete="current-password"
+            required
+          />
+          <button type="button" class="toggle-password" (click)="togglePassword()" aria-label="Mostrar u ocultar contraseña">
+            @if (showPassword) {
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                <line x1="1" y1="1" x2="23" y2="23"/>
+              </svg>
+            } @else {
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            }
+          </button>
+        </div>
+      </div>
+
+      <!-- Error message -->
+      @if (errorMessage) {
+        <p class="error-message">{{ errorMessage }}</p>
+      }
+
+      <!-- Primary login button -->
+      <button type="button" class="btn-primary" (click)="login()" [disabled]="!canSubmit">
+        @if (isSubmitting) { Iniciando sesión... } @else { Iniciar sesión }
+      </button>
+
+      <!-- Register link -->
+      <div class="register-section">
+        <p>¿No tienes una cuenta?
+          <button type="button" class="link-btn" (click)="register()" [disabled]="!canSubmit">Crear una cuenta</button>
+        </p>
+      </div>
+
+      <!-- Guest button -->
+      <div class="guest-section">
+        <button type="button" class="btn-guest" (click)="continueAsGuest()">Continuar sin iniciar sesión</button>
+      </div>
+
+    </div>
+
+    <!-- Footer links -->
+    <div class="login-footer">
+      <a href="#">Privacidad</a>
+      <a href="#">Términos</a>
+      <a href="#">Ayuda</a>
+    </div>
+
   </div>
+
+  <!-- Security badge (desktop only, fixed bottom-left) -->
+  <div class="security-badge">
+    <div class="security-badge-header">
+      <div class="security-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 2 3 7v6c0 5.25 3.75 10.15 9 11.25C17.25 23.15 21 18.25 21 13V7L12 2zm-1 14-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/>
+        </svg>
+      </div>
+      <span class="security-title">Transacción Protegida</span>
+    </div>
+    <p class="security-text">Cada operación en TrustMarket cuenta con cifrado de grado militar y protección al comprador.</p>
+  </div>
+
 </section>

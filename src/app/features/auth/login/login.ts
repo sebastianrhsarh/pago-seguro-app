@@ -17,6 +17,7 @@ export class LoginComponent implements OnInit {
   password = '';
   errorMessage = '';
   isSubmitting = false;
+  showPassword = false;
 
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
@@ -63,6 +64,14 @@ export class LoginComponent implements OnInit {
     } finally {
       this.isSubmitting = false;
     }
+  }
+
+  togglePassword(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+  continueAsGuest(): void {
+    this.router.navigate(['/']);
   }
 
   get canSubmit(): boolean {
