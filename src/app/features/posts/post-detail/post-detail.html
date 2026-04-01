@@ -1,0 +1,67 @@
+@if (post) {
+  <div class="detail-topbar">
+    <button class="icon-btn" (click)="goBack()" aria-label="Volver">
+      ←
+    </button>
+    <span class="detail-brand">TrustMarket</span>
+    <button class="icon-btn" aria-label="Compartir">
+      ↗
+    </button>
+  </div>
+
+  <section class="detail-wrap">
+    <article class="product-hero">
+      <div class="status-chip" [class.disponible]="post.estado === 'disponible'" [class.reservado]="post.estado === 'reservado'" [class.vendido]="post.estado === 'vendido'">
+        {{ post.estado }}
+      </div>
+      <div class="hero-name">{{ post.titulo }}</div>
+      <div class="verified-chip">Verificado</div>
+    </article>
+
+    <section class="summary-block">
+      <h1>{{ post.titulo }}</h1>
+      <div class="price-line">
+        <span class="price-main">${{ post.precio | number:'1.0-0' }}</span>
+      </div>
+    </section>
+
+    <section class="security-block">
+      <h2>Pago protegido hasta confirmar entrega</h2>
+      <p>
+        Tu dinero se mantiene protegido en TrustMarket. El vendedor solo recibe el pago cuando
+        tú validas el código de entrega.
+      </p>
+      <ul>
+        <li>Sin cargos ocultos por gestión de seguridad.</li>
+        <li>Soporte en caso de discrepancias del producto.</li>
+      </ul>
+    </section>
+
+    <section class="description-block">
+      <h3>Descripción del producto</h3>
+      <p>{{ post.descripcion }}</p>
+    </section>
+
+    @if (errorMessage) {
+      <p class="error-message">{{ errorMessage }}</p>
+    }
+  </section>
+
+  <div class="floating-buybar">
+    <button
+      class="buy-secure-btn"
+      (click)="iniciarCompraSegura()"
+      [disabled]="post.estado !== 'disponible' || isOwner || isProcessingPurchase"
+    >
+      {{ isProcessingPurchase ? 'Procesando...' : 'Iniciar compra segura' }}
+    </button>
+  </div>
+} @else if (errorMessage) {
+  <section class="detail-wrap">
+    <p class="error-message">{{ errorMessage }}</p>
+  </section>
+} @else {
+  <section class="detail-wrap">
+    <p>Cargando producto...</p>
+  </section>
+}

@@ -1,6 +1,37 @@
+.home-hero {
+  margin: 0.5rem 0 1.9rem;
+}
+
+.home-hero h1 {
+  margin: 0;
+  font-size: clamp(2rem, 3vw, 3.3rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.home-hero p {
+  margin: 0.65rem 0 0;
+  max-width: 620px;
+  color: #5b6479;
+  font-size: 15px;
+  line-height: 1.45;
+}
+
 .post-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  padding: 20px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.35rem;
+  align-items: start;
+}
+
+@media (max-width: 1080px) {
+  .post-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .post-list {
+    grid-template-columns: 1fr;
+  }
 }

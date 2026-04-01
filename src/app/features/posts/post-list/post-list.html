@@ -1,3 +1,13 @@
-<div class="post-list">
-  <app-post-item *ngFor="let post of posts$ | async" [post]="post"></app-post-item>
-</div>
+<section class="home-hero">
+  <h1>Productos encontrados</h1>
+  <p>
+    Descubre productos confiables de nuestra comunidad. Un flujo de compra simple,
+    seguro y con estados claros en tiempo real.
+  </p>
+</section>
+
+<section class="post-list">
+  @for (post of (posts$ | async); track post.id) {
+    <app-post-item [post]="post"></app-post-item>
+  }
+</section>

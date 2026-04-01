@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, query, onSnapshot, doc, updateDoc, addDoc } from '@angular/fire/firestore';
+import { Firestore, collection, query, onSnapshot, doc, updateDoc, addDoc, getDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Post } from '../../shared/models/post.interface';
 
@@ -51,5 +51,16 @@ export class PostService {
       });
       return () => unsubscribe();
     });
+  }
+
+  async getPostByIdOnce(postId: string): Promise<Post | null> {
+    const ref = doc(this.firestore, `posts/${postId}`);
+    const snap = await getDoc(ref);
+
+    if (!snap.exists()) {
+      return null;
+    }
+
+    return { id: snap.id, ...snap.data() } as Post;
   }
 }
