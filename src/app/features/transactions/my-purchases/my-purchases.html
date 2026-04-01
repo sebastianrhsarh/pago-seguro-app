@@ -7,13 +7,32 @@
       <p><strong>Monto:</strong> ${{ t.monto }}</p>
       <p>
         <strong>Estado:</strong>
-        <span class="badge" [class.pending]="t.estado === 'pendiente'" [class.completed]="t.estado === 'completado'">
+        <span
+          class="badge"
+          [class.pending]="t.estado === 'pendiente'"
+          [class.completed]="t.estado === 'completado'"
+          [class.cancelado]="t.estado === 'cancelado'"
+        >
           {{ t.estado }}
         </span>
       </p>
-      <p *ngIf="t.codigo" class="code">
+      <p>
+        <strong>Estado del producto:</strong>
+        <span
+          class="badge post-status"
+          [class.disponible]="t.postEstado === 'disponible'"
+          [class.reservado]="t.postEstado === 'reservado'"
+          [class.vendido]="t.postEstado === 'vendido'"
+        >
+          {{ t.postEstado }}
+        </span>
+      </p>
+      <p *ngIf="t.codigo && t.estado !== 'cancelado'" class="code">
         🔐 Código: <strong>{{ t.codigo }}</strong>
       </p>
+      <button *ngIf="t.estado === 'pendiente'" class="cancel-button" (click)="cancelarCompra(t)">
+        Cancelar compra
+      </button>
     </div>
   </ng-container>
 

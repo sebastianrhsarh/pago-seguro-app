@@ -17,17 +17,46 @@
   display: inline-block;
 }
 
-.pending {
+.badge.pending {
   background: orange;
   color: white;
 }
 
-.completed {
+.badge.completed {
   background: green;
   color: white;
+}
+
+.badge.cancelado {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.badge.post-status.disponible {
+  background: #d4edda;
+  color: #155724;
+}
+
+.badge.post-status.reservado {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.badge.post-status.vendido {
+  background: #f8d7da;
+  color: #721c24;
 }
 
 .code {
   color: green;
   font-size: 14px;
+}
+
+.cancel-button {
+  border: none;
+  border-radius: 8px;
+  padding: 0.45rem 0.8rem;
+  background: #c62828;
+  color: white;
+  cursor: pointer;
 }

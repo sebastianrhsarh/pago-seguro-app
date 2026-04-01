@@ -2,7 +2,17 @@
   <div class="post-card">
     <h3>{{ post.titulo }}</h3>
     <p class="price">${{ post.precio }}</p>
-    <p class="status">{{ post.estado }}</p>
+    <p>
+      <strong>Estado:</strong>
+      <span
+        class="state-badge"
+        [class.disponible]="post.estado === 'disponible'"
+        [class.reservado]="post.estado === 'reservado'"
+        [class.vendido]="post.estado === 'vendido'"
+      >
+        {{ post.estado }}
+      </span>
+    </p>
     <button
       *ngIf="post.estado === 'disponible' && !isOwner"
       class="buy-button"
@@ -13,7 +23,6 @@
     <p *ngIf="isOwner" class="owner-label">
       Este es tu producto
     </p>
-    <span *ngIf="post.estado !== 'disponible'" class="sold-badge">Vendido</span>
   </div>
 </ng-container>
 

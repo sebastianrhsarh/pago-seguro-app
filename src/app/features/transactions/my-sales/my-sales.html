@@ -7,8 +7,25 @@
       <p><strong>Monto:</strong> ${{ t.monto }}</p>
       <p>
         <strong>Estado:</strong>
-        <span class="badge" [class.pending]="t.estado === 'pendiente'" [class.completed]="t.estado === 'completado'">
+        <span
+          class="badge"
+          [class.pending]="t.estado === 'pendiente'"
+          [class.completed]="t.estado === 'completado'"
+          [class.cancelado]="t.estado === 'cancelado'"
+        >
           {{ t.estado }}
+        </span>
+      </p>
+
+      <p>
+        <strong>Estado del producto:</strong>
+        <span
+          class="badge post-status"
+          [class.disponible]="t.postEstado === 'disponible'"
+          [class.reservado]="t.postEstado === 'reservado'"
+          [class.vendido]="t.postEstado === 'vendido'"
+        >
+          {{ t.postEstado }}
         </span>
       </p>
 
@@ -24,6 +41,10 @@
 
       <p *ngIf="t.estado === 'completado'" class="confirmation-message">
         ✅ Entrega confirmada
+      </p>
+
+      <p *ngIf="t.estado === 'cancelado'" class="cancelled-message">
+        Compra cancelada por el comprador
       </p>
     </div>
   </ng-container>

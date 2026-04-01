@@ -25,6 +25,28 @@
   margin: 8px 0;
 }
 
+.state-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+.state-badge.disponible {
+  background: #d4edda;
+  color: #155724;
+}
+
+.state-badge.reservado {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.state-badge.vendido {
+  background: #f8d7da;
+  color: #721c24;
+}
+
 .buy-button {
   background-color: #007bff;
   color: white;
@@ -42,13 +64,4 @@
 .owner-label {
   color: #555;
   font-style: italic;
-}
-
-.sold-badge {
-  display: inline-block;
-  padding: 6px 12px;
-  background: #dc3545;
-  color: white;
-  border-radius: 8px;
-  font-size: 13px;
 }

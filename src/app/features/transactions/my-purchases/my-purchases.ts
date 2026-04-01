@@ -38,7 +38,11 @@ export class MyPurchases implements OnInit {
           txs.map(t =>
             this.postService.getPostById(t.postId).pipe(
               take(1),
-              map(post => ({ ...t, titulo: post?.titulo ?? t.postId }))
+              map(post => ({
+                ...t,
+                titulo: post?.titulo ?? t.postId,
+                postEstado: post?.estado ?? 'desconocido'
+              }))
             )
           )
         );
@@ -51,5 +55,22 @@ export class MyPurchases implements OnInit {
       },
       error: (err) => console.error('Error al cargar mis compras', err)
     });
+  }
+
+  cancelarCompra(transaction: any): void {
+    if (transaction.estado !== 'pendiente') {
+      return;
+    }
+
+    Promise.all([
+      this.transactionService.updateTransactionStatus(transaction.id, 'cancelado'),
+      this.postService.updatePostStatus(transaction.postId, 'disponible')
+    ])
+      .then(() => {
+        console.log('Compra cancelada y producto disponible nuevamente', transaction.id);
+      })
+      .catch((err) => {
+        console.error('Error cancelando compra', err);
+      });
   }
 }

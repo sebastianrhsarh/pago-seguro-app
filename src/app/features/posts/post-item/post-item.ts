@@ -50,6 +50,11 @@ export class PostItem implements OnInit, OnChanges {
       return;
     }
 
+    if (post.estado !== 'disponible') {
+      console.error('El producto no está disponible para compra');
+      return;
+    }
+
     const userId = this.authService.getCurrentUserId();
     if (!userId) {
       console.error('Debes iniciar sesión');
@@ -80,10 +85,11 @@ export class PostItem implements OnInit, OnChanges {
     this.transactionService.createTransaction(transaction)
       .then(() => {
         console.log('Transacción guardada en Firestore:', transaction);
-        return this.postService.updatePostStatus(post.id, 'vendido');
+        return this.postService.updatePostStatus(post.id, 'reservado');
       })
       .then(() => {
-        console.log('Estado del post actualizado a vendido', post.id);
+        console.log('Estado del post actualizado a reservado', post.id);
+        return this.router.navigate(['/mis-compras']);
       })
       .catch((err) => console.error('Error comprando:', err));
   }

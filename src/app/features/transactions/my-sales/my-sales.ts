@@ -40,7 +40,11 @@ export class MySales implements OnInit {
           txs.map(t =>
             this.postService.getPostById(t.postId).pipe(
               take(1),
-              map(post => ({ ...t, titulo: post?.titulo ?? t.postId }))
+              map(post => ({
+                ...t,
+                titulo: post?.titulo ?? t.postId,
+                postEstado: post?.estado ?? 'desconocido'
+              }))
             )
           )
         );
@@ -58,9 +62,12 @@ export class MySales implements OnInit {
   validarCodigo(transaction: any): void {
     const inputCodigo = this.codigoIngresadoMap[transaction.id] ?? '';
     if (inputCodigo === transaction.codigo) {
-      this.transactionService.updateTransactionStatus(transaction.id, 'completado')
+      Promise.all([
+        this.transactionService.updateTransactionStatus(transaction.id, 'completado'),
+        this.postService.updatePostStatus(transaction.postId, 'vendido')
+      ])
         .then(() => {
-          console.log('Estado de transacción actualizado a completado', transaction.id);
+          console.log('Transacción completada y post marcado como vendido', transaction.id);
         })
         .catch(err => {
           console.error('Error al actualizar transacción', err);

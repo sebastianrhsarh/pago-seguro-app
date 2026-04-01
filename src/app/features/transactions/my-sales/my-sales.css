@@ -58,3 +58,29 @@
   background: green;
   color: white;
 }
+
+.badge.cancelado {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.badge.post-status.disponible {
+  background: #d4edda;
+  color: #155724;
+}
+
+.badge.post-status.reservado {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.badge.post-status.vendido {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.cancelled-message {
+  color: #721c24;
+  font-weight: 600;
+  margin-top: .6rem;
+}
