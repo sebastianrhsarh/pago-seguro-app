@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, addDoc, query, where, onSnapshot, doc, updateDoc } from '@angular/fire/firestore';
+import { Firestore, collection, addDoc, query, where, onSnapshot, doc, updateDoc, getDocs, UpdateData, DocumentData } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -46,5 +46,41 @@ export class TransactionService {
   updateTransactionStatus(transactionId: string, estado: string): Promise<void> {
     const ref = doc(this.firestore, `transactions/${transactionId}`);
     return updateDoc(ref, { estado });
+  }
+
+  updateTransaction(transactionId: string, data: UpdateData<DocumentData>): Promise<void> {
+    const ref = doc(this.firestore, `transactions/${transactionId}`);
+    return updateDoc(ref, data);
+  }
+
+  async getLatestTransactionByBuyerAndPost(buyerId: string, postId: string): Promise<any | null> {
+    const transactionsCollection = collection(this.firestore, 'transactions');
+    const q = query(
+      transactionsCollection,
+      where('buyerId', '==', buyerId),
+      where('postId', '==', postId)
+    );
+
+    const snap = await getDocs(q);
+    if (snap.empty) {
+      return null;
+    }
+
+    const items = snap.docs.map(item => ({ id: item.id, ...item.data() }));
+    items.sort((a: any, b: any) => this.getTimeValue(b.createdAt) - this.getTimeValue(a.createdAt));
+
+    return items[0];
+  }
+
+  private getTimeValue(value: unknown): number {
+    if (value && typeof value === 'object' && 'toDate' in value && typeof (value as { toDate: () => Date }).toDate === 'function') {
+      return (value as { toDate: () => Date }).toDate().getTime();
+    }
+
+    if (value instanceof Date) {
+      return value.getTime();
+    }
+
+    return 0;
   }
 }

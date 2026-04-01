@@ -39,7 +39,7 @@ export class PostItem implements OnInit, OnChanges {
     }
   }
 
-  comprar(post: any): void {
+  async comprar(post: any): Promise<void> {
     console.log('EVENT: comprar() invocado');
     console.log('post passed to comprar:', post);
     console.log('post from @Input:', this.post);
@@ -70,6 +70,31 @@ export class PostItem implements OnInit, OnChanges {
     const codigo = this.generarCodigoTransaccion(6);
     console.log('codigo transaccion generado', codigo);
 
+    try {
+      const latestTransaction = await this.transactionService.getLatestTransactionByBuyerAndPost(userId, post.id);
+
+      if (latestTransaction?.estado === 'pendiente') {
+        console.log('Ya existe una compra pendiente para este producto, se reutiliza.');
+        await this.postService.updatePostStatus(post.id, 'reservado');
+        await this.router.navigate(['/mis-compras']);
+        return;
+      }
+
+      if (latestTransaction?.estado === 'cancelado') {
+        await this.transactionService.updateTransaction(latestTransaction.id, {
+          estado: 'pendiente',
+          codigo,
+          createdAt: new Date()
+        });
+        await this.postService.updatePostStatus(post.id, 'reservado');
+        await this.router.navigate(['/mis-compras']);
+        return;
+      }
+    } catch (err) {
+      console.error('Error consultando transacciones previas', err);
+      return;
+    }
+
     const transaction = {
       buyerId: userId,
       sellerId: post.sellerId,
@@ -82,16 +107,15 @@ export class PostItem implements OnInit, OnChanges {
 
     console.log('transaccion a guardar', transaction);
 
-    this.transactionService.createTransaction(transaction)
-      .then(() => {
-        console.log('Transacción guardada en Firestore:', transaction);
-        return this.postService.updatePostStatus(post.id, 'reservado');
-      })
-      .then(() => {
-        console.log('Estado del post actualizado a reservado', post.id);
-        return this.router.navigate(['/mis-compras']);
-      })
-      .catch((err) => console.error('Error comprando:', err));
+    try {
+      await this.transactionService.createTransaction(transaction);
+      console.log('Transacción guardada en Firestore:', transaction);
+      await this.postService.updatePostStatus(post.id, 'reservado');
+      console.log('Estado del post actualizado a reservado', post.id);
+      await this.router.navigate(['/mis-compras']);
+    } catch (err) {
+      console.error('Error comprando:', err);
+    }
   }
 
   private generarCodigoTransaccion(length = 6): string {
