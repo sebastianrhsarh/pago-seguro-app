@@ -1,55 +1,123 @@
-<div class="my-sales">
-  <h2>Mis Ventas</h2>
+<section class="my-sales-page">
+  <header class="sales-header">
+    <h1>Mis Ventas</h1>
+    <p>Gestiona tus transacciones activas y el historial de ventas.</p>
+  </header>
 
-  <ng-container *ngIf="transactions && transactions.length > 0; else sinVentas">
-    <div *ngFor="let t of transactions" class="sale-card">
-      <p><strong>Producto:</strong> {{ t.titulo }}</p>
-      <p><strong>Monto:</strong> ${{ t.monto }}</p>
-      <p>
-        <strong>Estado:</strong>
-        <span
-          class="badge"
-          [class.pending]="t.estado === 'pendiente'"
-          [class.completed]="t.estado === 'completado'"
-          [class.cancelado]="t.estado === 'cancelado'"
-        >
-          {{ t.estado }}
-        </span>
-      </p>
-
-      <p>
-        <strong>Estado del producto:</strong>
-        <span
-          class="badge post-status"
-          [class.disponible]="t.postEstado === 'disponible'"
-          [class.reservado]="t.postEstado === 'reservado'"
-          [class.vendido]="t.postEstado === 'vendido'"
-        >
-          {{ t.postEstado }}
-        </span>
-      </p>
-
-      <div *ngIf="t.estado === 'pendiente'" class="confirm">
-        <input
-          type="text"
-          [(ngModel)]="codigoIngresadoMap[t.id]"
-          placeholder="Ingresar código"
-        />
-        <button (click)="validarCodigo(t)">Confirmar entrega</button>
-        <p class="helper-text">El comprador ve este codigo en Mis Compras y debe compartirlo contigo.</p>
+  <section class="stats-grid">
+    <article class="stat-card">
+      <div class="stat-icon stat-icon--blue">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M4 7.5A1.5 1.5 0 0 1 5.5 6h13A1.5 1.5 0 0 1 20 7.5v9A1.5 1.5 0 0 1 18.5 18h-13A1.5 1.5 0 0 1 4 16.5v-9Z" fill="none" stroke="currentColor" stroke-width="1.7" />
+          <path d="M4 10.5h16" fill="none" stroke="currentColor" stroke-width="1.7" />
+        </svg>
       </div>
+      <p>Total ventas</p>
+      <strong>{{ formatCurrency(totalVentasMonto) }}</strong>
+    </article>
 
-      <p *ngIf="t.estado === 'completado'" class="confirmation-message">
-        ✅ Entrega confirmada
-      </p>
+    <article class="stat-card">
+      <div class="stat-icon stat-icon--orange">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+          <circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1.8" />
+        </svg>
+      </div>
+      <p>Pendientes de entrega</p>
+      <strong>{{ pendientesEntregaCount < 10 ? '0' + pendientesEntregaCount : pendientesEntregaCount }}</strong>
+    </article>
 
-      <p *ngIf="t.estado === 'cancelado'" class="cancelled-message">
-        Compra cancelada por el comprador
-      </p>
+    <article class="stat-card">
+      <div class="stat-icon stat-icon--green">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M12 3.25 5.5 6v4.1c0 4.23 2.82 8.16 6.5 9.65 3.68-1.49 6.5-5.42 6.5-9.65V6L12 3.25Z" fill="none" stroke="currentColor" stroke-width="1.7" />
+          <path d="m9.5 12.2 1.6 1.6 3.3-3.7" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </div>
+      <p>Completadas este mes</p>
+      <strong>{{ completadasMesCount }}</strong>
+    </article>
+  </section>
+
+  <section class="sales-list-section">
+    <div class="list-header-row">
+      <h2>Ventas Recientes</h2>
+      <div class="filter-group" aria-label="Filtros de ventas">
+        <button
+          type="button"
+          class="filter-button"
+          [class.filter-button--active]="selectedFilter === 'todas'"
+          (click)="setFilter('todas')"
+        >
+          Todas
+        </button>
+        <button
+          type="button"
+          class="filter-button"
+          [class.filter-button--active]="selectedFilter === 'pendientes'"
+          (click)="setFilter('pendientes')"
+        >
+          Pendientes
+        </button>
+      </div>
     </div>
-  </ng-container>
 
-  <ng-template #sinVentas>
-    <p>No hay ventas registradas.</p>
-  </ng-template>
-</div>
+    @if (filteredTransactions.length > 0) {
+      <div class="sales-list">
+        @for (t of filteredTransactions; track t.id) {
+          <article class="sale-card" [class.sale-card--completed]="t.estado === 'completado'" [class.sale-card--cancelled]="t.estado === 'cancelado'">
+            <div class="sale-thumb" [class.sale-thumb--muted]="t.estado !== 'pendiente'">
+              <span>{{ getInitials(t.titulo) }}</span>
+            </div>
+
+            <div class="sale-content">
+              <div class="sale-status-row">
+                <span class="sale-status" [class.sale-status--pending]="t.estado === 'pendiente'" [class.sale-status--completed]="t.estado === 'completado'" [class.sale-status--cancelled]="t.estado === 'cancelado'">
+                  {{ t.estado === 'pendiente' ? 'Pendiente de entrega' : t.estado === 'completado' ? 'Entrega confirmada' : 'Compra cancelada' }}
+                </span>
+                <span class="sale-id">ID: {{ getTransactionLabel(t) }}</span>
+              </div>
+
+              <h3>{{ t.titulo }}</h3>
+              <p class="sale-price">{{ formatCurrency(t.monto) }}</p>
+            </div>
+
+            <div class="sale-actions" [class.sale-actions--completed]="t.estado === 'completado'" [class.sale-actions--cancelled]="t.estado === 'cancelado'">
+              @if (t.estado === 'pendiente') {
+                <label [for]="'codigo-' + t.id">Código de seguridad del comprador</label>
+                <input
+                  [id]="'codigo-' + t.id"
+                  type="text"
+                  maxlength="6"
+                  placeholder="INGRESAR CÓDIGO"
+                  [ngModel]="codigoIngresadoMap[t.id] || ''"
+                  (ngModelChange)="updateCodigo(t.id, $event)"
+                />
+                <button type="button" (click)="validarCodigo(t)">Confirmar entrega</button>
+                @if (feedbackMap[t.id]) {
+                  <p class="feedback feedback--error">{{ feedbackMap[t.id] }}</p>
+                }
+              } @else if (t.estado === 'completado') {
+                <div class="completed-box">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M12 3.25 5.5 6v4.1c0 4.23 2.82 8.16 6.5 9.65 3.68-1.49 6.5-5.42 6.5-9.65V6L12 3.25Z" fill="none" stroke="currentColor" stroke-width="1.7" />
+                    <path d="m9.5 12.2 1.6 1.6 3.3-3.7" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                  <strong>Entrega confirmada</strong>
+                  <p>{{ getCompletionCopy(t) }}</p>
+                </div>
+              } @else {
+                <p class="cancelled-note">Compra cancelada por el comprador.</p>
+              }
+            </div>
+          </article>
+        }
+      </div>
+    } @else {
+      <article class="empty-state">
+        <h3>No hay ventas para mostrar</h3>
+        <p>Cuando recibas compras, aparecerán aquí para gestionar la confirmación de entrega.</p>
+      </article>
+    }
+  </section>
+</section>
