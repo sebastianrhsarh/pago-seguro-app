@@ -2,9 +2,11 @@
   <a routerLink="/">Productos</a>
   <a routerLink="/mis-compras">Mis Compras</a>
   <a routerLink="/mis-ventas">Mis Ventas</a>
-  <a routerLink="/login">Login</a>
   @if (user$ | async; as user) {
     <span class="nav-user">{{ user.email }}</span>
+    <button type="button" class="logout-btn" (click)="logout()">Cerrar sesion</button>
+  } @else {
+    <a class="login-link" routerLink="/login">Login</a>
   }
 </nav>
 

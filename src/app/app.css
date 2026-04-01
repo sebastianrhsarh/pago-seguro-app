@@ -28,6 +28,20 @@ body {
   font-size: 14px;
 }
 
+.login-link {
+  margin-left: auto;
+}
+
+.logout-btn {
+  border: none;
+  border-radius: 8px;
+  padding: 0.45rem 0.7rem;
+  background: #0f172a;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
 .page-content {
   padding: 1rem;
 }

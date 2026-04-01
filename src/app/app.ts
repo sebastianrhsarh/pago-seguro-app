@@ -1,6 +1,6 @@
 import { AsyncPipe } from '@angular/common';
 import { Component, signal } from '@angular/core';
-import { RouterOutlet, RouterLink } from '@angular/router';
+import { Router, RouterOutlet, RouterLink } from '@angular/router';
 import { AuthService } from './core/services/auth.service';
 
 @Component({
@@ -14,7 +14,15 @@ export class App {
   protected readonly title = signal('pago-seguro-frontend');
   protected readonly user$;
 
-  constructor(private authService: AuthService) {
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {
     this.user$ = this.authService.user$;
+  }
+
+  async logout(): Promise<void> {
+    await this.authService.logout();
+    await this.router.navigate(['/login']);
   }
 }
