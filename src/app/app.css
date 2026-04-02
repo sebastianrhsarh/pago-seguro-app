@@ -60,6 +60,10 @@ body {
   gap: 1rem;
 }
 
+.main-nav.nav-guest {
+  grid-template-columns: 1fr auto;
+}
+
 .main-nav a {
   text-decoration: none;
   color: #6b7280;
@@ -115,6 +119,14 @@ body {
   gap: 0.65rem;
 }
 
+.login-icon-btn {
+  color: #475569;
+}
+
+.login-icon-btn:hover {
+  color: #2563eb;
+}
+
 .user-menu {
   position: relative;
 }
@@ -165,10 +177,6 @@ body {
   transform: translateY(0);
 }
 
-.login-link {
-  font-weight: 700;
-}
-
 .page-content {
   max-width: 1240px;
   margin: 0 auto;
@@ -183,6 +191,11 @@ body {
     margin: 0 0.6rem;
     top: 8px;
     padding: 0.8rem 0.9rem;
+  }
+
+  .main-nav.nav-guest {
+    flex-wrap: nowrap;
+    align-items: center;
   }
 
   .brand-logo {

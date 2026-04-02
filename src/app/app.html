@@ -1,5 +1,5 @@
 @if (authReady$ | async) {
-  <nav class="main-nav">
+  <nav class="main-nav" [class.nav-guest]="!(user$ | async)">
     <a class="brand" [routerLink]="['/']" aria-label="Ir a productos">
       <img
         [ngSrc]="logoPath"
@@ -11,14 +11,14 @@
       />
     </a>
 
-    <div class="main-links">
-      <a routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{ exact: true }">Productos</a>
-      @if (user$ | async) {
+    @if (user$ | async; as user) {
+      <div class="main-links">
+        <a routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{ exact: true }">Productos</a>
         <a routerLink="/crear-post" routerLinkActive="active-link">Publicar</a>
         <a routerLink="/mis-compras" routerLinkActive="active-link">Mis Compras</a>
         <a routerLink="/mis-ventas" routerLinkActive="active-link">Mis Ventas</a>
-      }
-    </div>
+      </div>
+    }
 
     <div class="nav-actions">
       @if (user$ | async; as user) {
@@ -39,7 +39,25 @@
           </svg>
         </button>
       } @else {
-        <a class="login-link" routerLink="/login">Login</a>
+        <a class="icon-btn login-icon-btn" routerLink="/login" aria-label="Ir a iniciar sesion">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+            <polyline points="10 17 15 12 10 7"/>
+            <line x1="15" y1="12" x2="3" y2="12"/>
+          </svg>
+        </a>
       }
     </div>
   </nav>
