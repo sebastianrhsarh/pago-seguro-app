@@ -83,34 +83,19 @@
 .purchase-preview {
   position: relative;
   min-height: 208px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   overflow: hidden;
   background: linear-gradient(160deg, #12192c 0%, #192758 55%, #1d2d6e 100%);
 }
 
-.preview-glow {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 28% 18%, rgba(255, 255, 255, 0.24), transparent 34%);
+.purchase-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
-.purchase-preview span {
-  position: relative;
-  z-index: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 4.25rem;
-  height: 4.25rem;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  color: #ffffff;
-  font-size: 1.2rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
+.purchase-image--empty {
+  background: linear-gradient(160deg, #12192c 0%, #192758 55%, #1d2d6e 100%);
 }
 
 .purchase-content {
@@ -210,6 +195,48 @@
   letter-spacing: 0.14em;
 }
 
+.security-code-row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-top: 0.1rem;
+}
+
+.copy-code-button {
+  border: none;
+  border-radius: 999px;
+  padding: 0.38rem 0.72rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.32rem;
+  font-size: 0.66rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: #dbe7ff;
+  color: #1d4ed8;
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease;
+}
+
+.copy-code-button:hover {
+  background: #c9dbff;
+}
+
+.copy-code-button:active {
+  transform: translateY(1px);
+}
+
+.copy-code-button svg {
+  width: 0.85rem;
+  height: 0.85rem;
+}
+
+.copy-code-button--copied {
+  background: #dff7e8;
+  color: #208a50;
+}
+
 .cancel-button {
   border: none;
   border-radius: 12px;
@@ -252,13 +279,19 @@
   width: 4rem;
   height: 4rem;
   border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  overflow: hidden;
   background: linear-gradient(145deg, #d8dee9 0%, #b9c4da 100%);
-  color: #324361;
-  font-weight: 800;
-  letter-spacing: 0.08em;
+}
+
+.history-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.history-image--empty {
+  background: linear-gradient(145deg, #d8dee9 0%, #b9c4da 100%);
 }
 
 .history-card--cancelled .history-thumb {

@@ -20,8 +20,11 @@
           @for (t of activeTransactions; track t.id) {
             <article class="purchase-highlight-card">
               <div class="purchase-preview">
-                <div class="preview-glow"></div>
-                <span>{{ getInitials(t.titulo) }}</span>
+                @if (t.imageUrl) {
+                  <img class="purchase-image" [src]="t.imageUrl" [alt]="t.titulo" loading="lazy" decoding="async" />
+                } @else {
+                  <div class="purchase-image purchase-image--empty" aria-hidden="true"></div>
+                }
               </div>
 
               <div class="purchase-content">
@@ -43,7 +46,28 @@
 
                     <div>
                       <p>CÓDIGO DE SEGURIDAD</p>
-                      <strong>{{ t.codigo }}</strong>
+                      <div class="security-code-row">
+                        <strong>{{ t.codigo }}</strong>
+                        <button
+                          type="button"
+                          class="copy-code-button"
+                          [class.copy-code-button--copied]="copiedStateMap[t.id]"
+                          (click)="copySecurityCode(t)"
+                        >
+                          @if (copiedStateMap[t.id]) {
+                            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                              <path d="m5 12 4 4 10-10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                            Copiado
+                          } @else {
+                            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                              <rect x="9" y="9" width="10" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.8" />
+                              <path d="M7 15H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v1" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+                            </svg>
+                            Copiar
+                          }
+                        </button>
+                      </div>
                     </div>
                   </div>
 
@@ -78,7 +102,11 @@
           @for (t of historyTransactions; track t.id) {
             <article class="history-card" [class.history-card--cancelled]="t.estado === 'cancelado'">
               <div class="history-thumb">
-                <span>{{ getInitials(t.titulo) }}</span>
+                @if (t.imageUrl) {
+                  <img class="history-image" [src]="t.imageUrl" [alt]="t.titulo" loading="lazy" decoding="async" />
+                } @else {
+                  <div class="history-image history-image--empty" aria-hidden="true"></div>
+                }
               </div>
 
               <div class="history-content">

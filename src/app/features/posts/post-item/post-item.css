@@ -36,11 +36,16 @@
   height: 100%;
   object-fit: cover;
   opacity: 0;
-  transition: opacity 180ms ease;
+  transform: scale(1);
+  transition: opacity 180ms ease, transform 360ms ease;
 }
 
 .media-shell.image-loaded .product-image {
   opacity: 1;
+}
+
+.media-shell.can-buy:hover .product-image {
+  transform: scale(1.08);
 }
 
 .image-skeleton {

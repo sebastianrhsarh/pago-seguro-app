@@ -20,6 +20,7 @@ interface SaleTransaction {
   codigo?: string;
   createdAt?: unknown;
   titulo: string;
+  imageUrl?: string;
   postEstado: SalePostStatus;
 }
 
@@ -64,6 +65,7 @@ export class MySales implements OnInit {
                   map(post => ({
                     ...t,
                     titulo: post?.titulo ?? t.postId,
+                    imageUrl: post?.imageUrl,
                     postEstado: post?.estado ?? 'desconocido'
                   }) as SaleTransaction)
                 )
@@ -170,15 +172,6 @@ export class MySales implements OnInit {
 
   getTransactionLabel(transaction: SaleTransaction): string {
     return `#${transaction.id.slice(0, 4).toUpperCase()}-${transaction.id.slice(-3).toUpperCase()}`;
-  }
-
-  getInitials(title: string): string {
-    return title
-      .split(' ')
-      .filter(Boolean)
-      .slice(0, 2)
-      .map(part => part[0]?.toUpperCase() ?? '')
-      .join('');
   }
 
   getCompletionCopy(transaction: SaleTransaction): string {

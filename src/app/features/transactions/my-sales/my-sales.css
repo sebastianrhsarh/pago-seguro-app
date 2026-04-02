@@ -171,9 +171,7 @@
 .sale-thumb {
   border-radius: 0.95rem;
   min-height: 108px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  overflow: hidden;
   background: linear-gradient(155deg, #131b2e 0%, #24396f 60%, #004ac6 100%);
 }
 
@@ -181,19 +179,15 @@
   filter: grayscale(0.2);
 }
 
-.sale-thumb span {
-  width: 3.35rem;
-  height: 3.35rem;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.24);
-  background: rgba(255, 255, 255, 0.14);
-  color: #ffffff;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 800;
-  font-size: 1rem;
-  letter-spacing: 0.08em;
+.sale-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.sale-image--empty {
+  background: linear-gradient(155deg, #131b2e 0%, #24396f 60%, #004ac6 100%);
 }
 
 .sale-content {

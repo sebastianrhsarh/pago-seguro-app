@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, NgZone } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { TransactionService } from '../../../core/services/transaction.service';
@@ -18,6 +18,7 @@ interface PurchaseTransaction {
   codigo?: string;
   createdAt?: unknown;
   titulo: string;
+  imageUrl?: string;
   postEstado: PurchasePostStatus;
 }
 
@@ -28,8 +29,12 @@ interface PurchaseTransaction {
   templateUrl: './my-purchases.html',
   styleUrl: './my-purchases.css',
 })
-export class MyPurchases implements OnInit {
+export class MyPurchases implements OnInit, OnDestroy {
+  private static readonly COPY_FEEDBACK_MS = 1800;
+
   transactions: PurchaseTransaction[] = [];
+  copiedStateMap: Record<string, boolean> = {};
+  private copyResetTimerMap: Record<string, ReturnType<typeof setTimeout> | undefined> = {};
 
   constructor(
     private transactionService: TransactionService,
@@ -59,6 +64,7 @@ export class MyPurchases implements OnInit {
                   map(post => ({
                     ...t,
                     titulo: post?.titulo ?? t.postId,
+                    imageUrl: post?.imageUrl,
                     postEstado: post?.estado ?? 'desconocido'
                   }) as PurchaseTransaction)
                 )
@@ -91,6 +97,14 @@ export class MyPurchases implements OnInit {
       .catch((err) => {
         console.error('Error cancelando compra', err);
       });
+  }
+
+  ngOnDestroy(): void {
+    for (const timer of Object.values(this.copyResetTimerMap)) {
+      if (timer) {
+        clearTimeout(timer);
+      }
+    }
   }
 
   get activeTransactions(): PurchaseTransaction[] {
@@ -131,13 +145,30 @@ export class MyPurchases implements OnInit {
     return `Cancelado el ${this.formatDate(transaction.createdAt)}`;
   }
 
-  getInitials(title: string): string {
-    return title
-      .split(' ')
-      .filter(Boolean)
-      .slice(0, 2)
-      .map(part => part[0]?.toUpperCase() ?? '')
-      .join('');
+  async copySecurityCode(transaction: PurchaseTransaction): Promise<void> {
+    const code = (transaction.codigo ?? '').trim();
+    if (!code) {
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(code);
+      this.copiedStateMap[transaction.id] = true;
+
+      const existingTimer = this.copyResetTimerMap[transaction.id];
+      if (existingTimer) {
+        clearTimeout(existingTimer);
+      }
+
+      this.copyResetTimerMap[transaction.id] = setTimeout(() => {
+        this.copiedStateMap[transaction.id] = false;
+        this.cdr.detectChanges();
+      }, MyPurchases.COPY_FEEDBACK_MS);
+
+      this.cdr.detectChanges();
+    } catch (error) {
+      console.error('No se pudo copiar el código.', error);
+    }
   }
 
   private getTimeValue(value: unknown): number {

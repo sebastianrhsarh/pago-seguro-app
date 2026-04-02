@@ -26,11 +26,11 @@
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  padding: 26px;
+  padding: 0;
 }
 
 .product-hero.has-image {
-  background: #0f172a;
+  background: #0b122d;
 }
 
 .detail-image {
@@ -38,7 +38,9 @@
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
+  padding: 0;
   opacity: 0;
   transition: opacity 220ms ease;
 }
@@ -53,17 +55,6 @@
   background: linear-gradient(110deg, #1a2a67 15%, #2e3f81 45%, #1a2a67 75%);
   background-size: 220% 100%;
   animation: detail-shimmer 1.2s linear infinite;
-}
-
-.hero-name {
-  position: relative;
-  z-index: 1;
-  color: rgba(255, 255, 255, 0.95);
-  font-family: Manrope, Inter, sans-serif;
-  font-size: clamp(2rem, 5vw, 3.7rem);
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  text-shadow: 0 2px 12px rgba(15, 23, 42, 0.45);
 }
 
 .status-chip {
@@ -185,6 +176,12 @@
 .buy-secure-btn:disabled {
   cursor: not-allowed;
   opacity: 0.6;
+}
+
+@media (max-width: 768px) {
+  .detail-image {
+    padding: 0;
+  }
 }
 
 @keyframes detail-shimmer {

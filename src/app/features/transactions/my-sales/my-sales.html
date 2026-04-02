@@ -67,7 +67,11 @@
         @for (t of filteredTransactions; track t.id) {
           <article class="sale-card" [class.sale-card--completed]="t.estado === 'completado'" [class.sale-card--cancelled]="t.estado === 'cancelado'">
             <div class="sale-thumb" [class.sale-thumb--muted]="t.estado !== 'pendiente'">
-              <span>{{ getInitials(t.titulo) }}</span>
+              @if (t.imageUrl) {
+                <img class="sale-image" [src]="t.imageUrl" [alt]="t.titulo" loading="lazy" decoding="async" />
+              } @else {
+                <div class="sale-image sale-image--empty" aria-hidden="true"></div>
+              }
             </div>
 
             <div class="sale-content">
