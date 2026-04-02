@@ -4,9 +4,22 @@
       ← Volver
     </button>
 
-    <article class="product-hero" [class.has-image]="!!post.imageUrl">
+    <article class="product-hero" [class.has-image]="!!post.imageUrl" [class.image-loaded]="imageLoaded">
       @if (post.imageUrl) {
-        <img class="detail-image" [src]="post.imageUrl" [alt]="post.titulo" />
+        @if (!imageLoaded) {
+          <div class="detail-image-skeleton" aria-hidden="true"></div>
+        }
+
+        <img
+          class="detail-image"
+          [src]="post.imageUrl"
+          [alt]="post.titulo"
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+          (load)="onDetailImageLoad()"
+          (error)="onDetailImageError()"
+        />
       }
 
       <div class="status-chip" [class.disponible]="post.estado === 'disponible'" [class.reservado]="post.estado === 'reservado'" [class.vendido]="post.estado === 'vendido'">

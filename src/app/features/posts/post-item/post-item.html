@@ -3,10 +3,24 @@
     <div
       class="media-shell"
       [class.has-image]="!!post.imageUrl"
+      [class.image-loaded]="imageLoaded"
       [class.can-buy]="true"
     >
       @if (post.imageUrl) {
-        <img class="product-image" [src]="post.imageUrl" [alt]="post.titulo" />
+        @if (!imageLoaded) {
+          <div class="image-skeleton" aria-hidden="true"></div>
+        }
+
+        <img
+          class="product-image"
+          [src]="post.imageUrl"
+          [alt]="post.titulo"
+          [attr.loading]="highPriority ? 'eager' : 'lazy'"
+          [attr.fetchpriority]="highPriority ? 'high' : 'auto'"
+          decoding="async"
+          (load)="onImageLoad()"
+          (error)="onImageError()"
+        />
       }
 
       <div class="chips-top">

@@ -12,6 +12,8 @@ import { AuthService } from '../../../core/services/auth.service';
 })
 export class PostItem implements OnInit, OnChanges {
   @Input() post: any = null;
+  @Input() highPriority = false;
+  imageLoaded = false;
   private readonly clNumberFormatter = new Intl.NumberFormat('es-CL', {
     maximumFractionDigits: 0,
   });
@@ -28,7 +30,11 @@ export class PostItem implements OnInit, OnChanges {
 
   ngOnInit(): void {}
 
-  ngOnChanges(_: SimpleChanges): void {}
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['post']) {
+      this.imageLoaded = !this.post?.imageUrl;
+    }
+  }
 
   onCardClick(post: any): void {
     if (post?.id) {
@@ -39,5 +45,13 @@ export class PostItem implements OnInit, OnChanges {
   formatPrice(value: unknown): string {
     const amount = typeof value === 'number' ? value : Number(value ?? 0);
     return this.clNumberFormatter.format(Number.isFinite(amount) ? amount : 0);
+  }
+
+  onImageLoad(): void {
+    this.imageLoaded = true;
+  }
+
+  onImageError(): void {
+    this.imageLoaded = true;
   }
 }

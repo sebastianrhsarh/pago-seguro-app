@@ -23,6 +23,7 @@ export class PostDetailComponent {
   isLoading = true;
   isProcessingPurchase = false;
   errorMessage = '';
+  imageLoaded = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -56,6 +57,7 @@ export class PostDetailComponent {
 
       this.ngZone.run(() => {
         this.post = loadedPost;
+        this.imageLoaded = !loadedPost?.imageUrl;
         if (!loadedPost) {
           this.errorMessage = 'Este producto no existe o ya no está disponible.';
         }
@@ -162,6 +164,14 @@ export class PostDetailComponent {
     const amount = typeof value === 'number' ? value : Number(value ?? 0);
     return this.clNumberFormatter.format(Number.isFinite(amount) ? amount : 0);
   }
+
+  onDetailImageLoad(): void {
+    this.imageLoaded = true;
+  }
+
+  onDetailImageError(): void {
+    this.imageLoaded = true;
+  }
 }
 
 type PostLike = {
@@ -169,4 +179,5 @@ type PostLike = {
   sellerId: string;
   estado: string;
   precio: number;
+  imageUrl?: string;
 };

@@ -7,7 +7,7 @@
 </section>
 
 <section class="post-list">
-  @for (post of (posts$ | async); track post.id) {
-    <app-post-item [post]="post"></app-post-item>
+  @for (post of (posts$ | async); track post.id; let i = $index) {
+    <app-post-item [post]="post" [highPriority]="i < 3"></app-post-item>
   }
 </section>
