@@ -5,5 +5,6 @@ export interface Post {
   precio: number;
   estado: 'disponible' | 'reservado' | 'vendido';
   sellerId: string;
+  imageUrl?: string;
   createdAt: Date;
 }

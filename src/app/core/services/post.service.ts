@@ -1,5 +1,6 @@
 import { EnvironmentInjector, Injectable, inject, runInInjectionContext } from '@angular/core';
 import { Firestore, collection, query, onSnapshot, doc, updateDoc, addDoc, getDoc } from '@angular/fire/firestore';
+import { Storage, ref, uploadBytes, getDownloadURL } from '@angular/fire/storage';
 import { Observable } from 'rxjs';
 import { Post } from '../../shared/models/post.interface';
 
@@ -11,7 +12,10 @@ export type CreatePostPayload = Omit<Post, 'id'>;
 export class PostService {
   private readonly injector = inject(EnvironmentInjector);
 
-  constructor(private firestore: Firestore) {}
+  constructor(
+    private firestore: Firestore,
+    private storage: Storage
+  ) {}
 
   getPosts(): Observable<Post[]> {
     const colRef = this.inContext(() => collection(this.firestore, 'posts'));
@@ -47,6 +51,26 @@ export class PostService {
   createPost(post: CreatePostPayload) {
     const postsRef = this.inContext(() => collection(this.firestore, 'posts'));
     return this.inContext(() => addDoc(postsRef, post));
+  }
+
+  async uploadImage(file: File): Promise<string> {
+    const safeName = file.name.replace(/\s+/g, '-').toLowerCase();
+    const uniqueName = `${Date.now()}-${Math.random().toString(36).slice(2, 10)}-${safeName}`;
+    const imageRef = this.inContext(() => ref(this.storage, `posts/${uniqueName}`));
+
+    console.info('[PostService] uploadImage start', {
+      path: `posts/${uniqueName}`,
+      name: file.name,
+      size: file.size,
+      type: file.type,
+    });
+
+    await this.inContext(() => uploadBytes(imageRef, file));
+    console.info('[PostService] uploadImage uploadBytes OK');
+
+    const url = await this.inContext(() => getDownloadURL(imageRef));
+    console.info('[PostService] uploadImage getDownloadURL OK');
+    return url;
   }
 
   getPostById(postId: string): Observable<Post | null> {

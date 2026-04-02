@@ -2,8 +2,13 @@
   <div class="post-card" (click)="onCardClick(post)">
     <div
       class="media-shell"
+      [class.has-image]="!!post.imageUrl"
       [class.can-buy]="true"
     >
+      @if (post.imageUrl) {
+        <img class="product-image" [src]="post.imageUrl" [alt]="post.titulo" />
+      }
+
       <div class="chips-top">
         <span
           class="state-badge"

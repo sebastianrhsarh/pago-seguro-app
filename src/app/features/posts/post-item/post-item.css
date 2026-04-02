@@ -25,6 +25,18 @@
   padding: 18px;
 }
 
+.media-shell.has-image {
+  background: #0f172a;
+}
+
+.product-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .media-shell.can-buy {
   cursor: pointer;
 }

@@ -194,17 +194,35 @@
 .photo-placeholder {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 8.25rem;
+  gap: 0.75rem;
+  min-height: 7.8rem;
   border: 1.5px dashed rgba(195, 198, 215, 0.8);
   border-radius: 12px;
   background: rgba(248, 249, 250, 0.65);
+  color: #6b7280;
+  padding: 0.9rem;
+  cursor: pointer;
+}
+
+.photo-placeholder:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+.photo-placeholder input[type='file'] {
+  display: none;
+}
+
+.photo-copy-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   text-align: center;
   color: #97a0b4;
 }
 
-.photo-placeholder svg {
+.photo-copy-wrap svg {
   width: 2rem;
   height: 2rem;
   margin-bottom: 0.45rem;
@@ -226,6 +244,32 @@
   margin: 0.2rem 0 0;
   font-size: 0.75rem;
   color: #a0a8ba;
+}
+
+.photo-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.photo-preview img {
+  width: 100%;
+  max-height: 220px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid rgba(195, 198, 215, 0.8);
+}
+
+.photo-remove {
+  align-self: flex-end;
+  border: 1px solid rgba(220, 38, 38, 0.24);
+  background: #fff1f2;
+  color: #be123c;
+  border-radius: 999px;
+  padding: 0.35rem 0.7rem;
+  font-size: 0.74rem;
+  font-weight: 700;
+  cursor: pointer;
 }
 
 .create-post-form button {

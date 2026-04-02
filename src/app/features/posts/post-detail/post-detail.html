@@ -4,7 +4,11 @@
       ← Volver
     </button>
 
-    <article class="product-hero">
+    <article class="product-hero" [class.has-image]="!!post.imageUrl">
+      @if (post.imageUrl) {
+        <img class="detail-image" [src]="post.imageUrl" [alt]="post.titulo" />
+      }
+
       <div class="status-chip" [class.disponible]="post.estado === 'disponible'" [class.reservado]="post.estado === 'reservado'" [class.vendido]="post.estado === 'vendido'">
         {{ post.estado }}
       </div>
